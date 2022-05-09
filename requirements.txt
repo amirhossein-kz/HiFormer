@@ -1,0 +1,5 @@
+pip install timm
+pip install einops
+pip install ml_collections
+pip install fvcore
+pip install submitit
