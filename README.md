@@ -1,1 +1,1 @@
-# SwinRetina
+# SwinRetina paper
