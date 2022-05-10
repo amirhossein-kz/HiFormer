@@ -12,6 +12,8 @@ build/
 develop-eggs/
 dist/
 downloads/
+weights/
+*.pth
 eggs/
 .eggs/
 lib/

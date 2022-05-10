@@ -1,5 +1,9 @@
-pip install timm
-pip install einops
-pip install ml_collections
-pip install fvcore
-pip install submitit
+timm
+einops
+ml_collections
+fvcore
+submitit
+wget
+tensorboardX
+SimpleITK
+medpy
