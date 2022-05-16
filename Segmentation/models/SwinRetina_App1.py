@@ -1,7 +1,5 @@
 import torch
 import numpy as np
-import os
-import math
 import torch.nn as nn
 import torch.utils.checkpoint as checkpoint
 import torchvision
@@ -180,14 +178,12 @@ class PyramidFeatures(nn.Module):
     def forward(self, x):
         
         for i in range(5):
-            
             x = self.resnet_layers[i](x) 
         
         # 1
         fm1 = x
         fm1_ch = self.p1_ch(x)
-        B, C, H, W = fm1_ch.shape
-        fm1_reshaped = fm1_ch.view(B, C, W*H).permute(0,2,1)
+        fm1_reshaped = Rearrange('b c h w -> b (h w) c')(fm1_ch)               
         sw1 = self.swin_transformer.layers[0](fm1_reshaped)
         sw1_skipped = fm1_reshaped  + sw1
         fm1_sw1 = self.p1_pm(sw1_skipped)
@@ -196,8 +192,7 @@ class PyramidFeatures(nn.Module):
         fm1_sw2 = self.swin_transformer.layers[1](fm1_sw1)
         fm2 = self.p2(fm1)
         fm2_ch = self.p2_ch(fm2)
-        B, C, H, W = fm2_ch.shape
-        fm2_reshaped = fm2_ch.view(B, C, W*H).permute(0,2,1)
+        fm2_reshaped = Rearrange('b c h w -> b (h w) c')(fm2_ch) 
         fm2_sw2_skipped = fm2_reshaped  + fm1_sw2
         fm2_sw2 = self.p2_pm(fm2_sw2_skipped)
     
@@ -205,13 +200,11 @@ class PyramidFeatures(nn.Module):
         sw1_skipped_projected = self.proj1_2(sw1_skipped)
         concat1 = torch.cat((sw1_skipped_projected, fm2_sw2_skipped), dim = 1)
         
-        
         #3
         fm2_sw3 = self.swin_transformer.layers[2](fm2_sw2)
         fm3 = self.p3(fm2)
         fm3_ch = self.p3_ch(fm3)
-        B, C, H, W = fm3_ch.shape
-        fm3_reshaped = fm3_ch.view(B, C, W*H).permute(0,2,1)
+        fm3_reshaped = Rearrange('b c h w -> b (h w) c')(fm3_ch) 
         fm3_sw3_skipped = fm3_reshaped  + fm2_sw3
         fm3_sw3 = self.p3_pm(fm3_sw3_skipped)
         
@@ -219,10 +212,8 @@ class PyramidFeatures(nn.Module):
         fm3_sw4 = self.swin_transformer.layers[3](fm3_sw3)
         fm4 = self.p4(fm3)
         fm4_ch = self.p4_ch(fm4)
-        B, C, H, W = fm4_ch.shape
-        fm4_reshaped = fm4_ch.view(B, C, W*H).permute(0,2,1)
+        fm4_reshaped = Rearrange('b c h w -> b (h w) c')(fm4_ch) 
         fm4_sw4_skipped = fm4_reshaped  + fm3_sw4
-
         
         #concat 3,4
         sw4_skipped_projected = self.proj3_4(fm4_sw4_skipped)
@@ -233,9 +224,9 @@ class PyramidFeatures(nn.Module):
 
 class All2Cross(nn.Module):
     def __init__(self, config, img_size = 224 , in_chans=3, embed_dim=(192, 384),
-                 depth=([1, 4, 0], [1, 4, 0]), num_classes = 1000,
-                 num_heads=(6, 6), mlp_ratio=(4., 4., 1.), qkv_bias=False, qk_scale=None, drop_rate=0., attn_drop_rate=0.,
-                 drop_path_rate=0., norm_layer=nn.LayerNorm, multi_conv=False):
+                 depth=([1, 4, 0], [1, 4, 0]), num_heads=(6, 6), mlp_ratio=(4., 4., 1.),
+                 qkv_bias=False, qk_scale=None, drop_rate=0., attn_drop_rate=0.,
+                 drop_path_rate=0., norm_layer=nn.LayerNorm):
         super().__init__()
         self.pyramid = PyramidFeatures(config=config, img_size= img_size, in_channels=in_chans)
         
@@ -301,6 +292,7 @@ class All2Cross(nn.Module):
         out = [x[:, 0] for x in xs]
         return xs
 
+
 class ConvUpsample(nn.Module):
     def __init__(self, in_chans=384, out_chans=[128], upsample=True):
         super().__init__()
@@ -336,11 +328,16 @@ class SegmentationHead(nn.Sequential):
 class SwinRetina_v1(nn.Module):
     def __init__(self, config, img_size=224, in_chans=3, n_classes=16):
         super().__init__()
+        self.img_size = img_size
+        self.patch_size = [[4,8],[16,32]]
+
         self.n_classes = n_classes
         self.All2Cross = All2Cross(config = config, img_size= img_size, in_chans=in_chans)
         
-        self.ConvUp_s = ConvUpsample(in_chans=384, out_chans=[128,128,128])
-        self.ConvUp_l = ConvUpsample(in_chans=192, out_chans=[128])
+        self.conv_list = nn.ModuleList([nn.ModuleList([ConvUpsample(in_chans=192, out_chans=[128], upsample=False),
+                                        ConvUpsample(in_chans=192, out_chans=[128])]),
+                                        nn.ModuleList([ConvUpsample(in_chans=384, out_chans=[128,128]),
+                                        ConvUpsample(in_chans=384, out_chans=[128,128,128])])])
 
         self.segmentation_head = SegmentationHead(
             in_channels=16,
@@ -361,14 +358,20 @@ class SwinRetina_v1(nn.Module):
     def forward(self, x):
         xs = self.All2Cross(x)
         embeddings = [x[:, 1:] for x in xs]
+
         reshaped_embed = []
         for i, embed in enumerate(embeddings):
-            embed = torch.reshape(embed, (embed.shape[0], 5, embed.shape[1]//5, embed.shape[2])) # Reshape >>>(1,5,28*28,192)
-            embed = embed.mean(dim=(1)) #GAP >>> (1,28*28,192)
-            embed = embed.permute(0, 2, 1) # Permutation >>> (1,192, 28*28)
-            embed = torch.reshape(embed, (embed.shape[0], embed.shape[1], int(math.sqrt(embed.shape[2])), int(math.sqrt(embed.shape[2]))))# Reshape >>> (1,192,28,28)
-            embed = self.ConvUp_l(embed) if i == 0 else self.ConvUp_s(embed)
-            reshaped_embed.append(embed)
+            embed_l = embed[:, : (self.img_size//self.patch_size[i][0])**2,:]
+            embed_s = embed[:, (self.img_size//self.patch_size[i][0])**2:,:]
+
+            value_l = Rearrange('b (h w) d -> b d h w', h=(self.img_size//self.patch_size[i][0]), w=(self.img_size//self.patch_size[i][0]))(embed_l)
+            value_s = Rearrange('b (h w) d -> b d h w', h=(self.img_size//self.patch_size[i][1]), w=(self.img_size//self.patch_size[i][1]))(embed_s)
+            
+            conv_value_l = self.conv_list[i][0](value_l)
+            conv_value_s = self.conv_list[i][1](value_s)
+                        
+            value_sum = conv_value_l + conv_value_s
+            reshaped_embed.append(value_sum)
             
         C = reshaped_embed[0] + reshaped_embed[1]
         C = self.conv_pred(C)
