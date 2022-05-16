@@ -325,7 +325,7 @@ class SegmentationHead(nn.Sequential):
         super().__init__(conv2d)
 
 
-class SwinRetina_v1(nn.Module):
+class SwinRetina_V1(nn.Module):
     def __init__(self, config, img_size=224, in_chans=3, n_classes=16):
         super().__init__()
         self.img_size = img_size
