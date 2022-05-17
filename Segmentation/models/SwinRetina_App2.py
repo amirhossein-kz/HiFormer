@@ -236,7 +236,7 @@ class PyramidFeatures(nn.Module):
 
 
 class All2Cross(nn.Module):
-    def __init__(self, config, img_size = 224 , in_chans=3, embed_dim=(192, 384),
+    def __init__(self, config, img_size = 224 , in_chans=3, embed_dim=(96, 768),
                  depth=([1, 3, 1], [1, 3, 1]), num_heads=(6, 12), mlp_ratio=(2., 2., 4.),
                  qkv_bias=False, qk_scale=None, drop_rate=0., attn_drop_rate=0.,
                  drop_path_rate=0., norm_layer=nn.LayerNorm):

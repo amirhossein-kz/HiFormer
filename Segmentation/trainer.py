@@ -117,7 +117,7 @@ def trainer_synapse(args, model, snapshot_path):
             outputs = model(image_batch)
             loss_ce = ce_loss(outputs, label_batch[:].long())
             loss_dice = dice_loss(outputs, label_batch, softmax=True)
-            loss = 0.4 * loss_ce + 0.6 * loss_dice
+            loss = 0.5 * loss_ce + 0.5 * loss_dice
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
