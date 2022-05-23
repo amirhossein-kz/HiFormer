@@ -17,8 +17,8 @@ def get_swin_res34_cfg():
     os.makedirs('./weights', exist_ok=True)
 
     if not os.path.isfile('./weights/swin_tiny_patch4_window7_224.pth'):
+        print('Downloading Swin-transformer model ...')
         wget.download("https://github.com/SwinTransformer/storage/releases/download/v1.0.0/swin_tiny_patch4_window7_224.pth", "./weights/swin_tiny_patch4_window7_224.pth")    
-        print('Swin-transformer model is downloaded.')
     cfg.swin_pretrained_path = './weights/swin_tiny_patch4_window7_224.pth'
 
     return cfg
@@ -33,13 +33,12 @@ def get_swin_res50_cfg():
     cfg.num_classes = 9
 
     # custom
-    # custom
     cfg.resnet_pretrained = True
     os.makedirs('./weights', exist_ok=True)
     
     if not os.path.isfile('./weights/swin_tiny_patch4_window7_224.pth'):
+        print('Downloading Swin-transformer model ...')
         wget.download("https://github.com/SwinTransformer/storage/releases/download/v1.0.0/swin_tiny_patch4_window7_224.pth", "./weights/swin_tiny_patch4_window7_224.pth")    
-        print('Swin-transformer model is downloaded.')
     cfg.swin_pretrained_path = './weights/swin_tiny_patch4_window7_224.pth'
 
     return cfg
@@ -57,9 +56,9 @@ def get_swin_res18_cfg():
     cfg.resnet_pretrained = True
     os.makedirs('./weights', exist_ok=True)
     
-    if not os.path.isfile('./weights/swin_tiny_patch4_window7_224.pth'):    
+    if not os.path.isfile('./weights/swin_tiny_patch4_window7_224.pth'):
+        print('Downloading Swin-transformer model ...')    
         wget.download("https://github.com/SwinTransformer/storage/releases/download/v1.0.0/swin_tiny_patch4_window7_224.pth", "./weights/swin_tiny_patch4_window7_224.pth")    
-        print('Swin-transformer model is downloaded.')
     cfg.swin_pretrained_path = './weights/swin_tiny_patch4_window7_224.pth'
     
     return cfg
