@@ -38,7 +38,7 @@ parser.add_argument('--seed', type=int,
                     default=1234, help='random seed')
 parser.add_argument('--output-dir', type=str,
                     default='./output', help='root dir for output log')
-parser.add_argument('--model-name', type=str,
+parser.add_argument('--model_name', type=str,
                     default='Swin_Res34', help='[Swin_Res18, Swin_Res34, Swin_Res50]')
 parser.add_argument('--eval_interval', type=int,
                     default=50, help='evaluation epoch')

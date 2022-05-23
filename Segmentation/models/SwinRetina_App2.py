@@ -150,7 +150,7 @@ class PyramidFeatures(nn.Module):
     def __init__(self, config, img_size = 224, in_channels = 3):
         super().__init__()
         
-        model_path = config.pretrained_path
+        model_path = config.swin_pretrained_path
         self.swin_transformer = SwinTransformer(img_size,in_chans = 3)
         checkpoint = torch.load(model_path, map_location=torch.device('cpu'))['model']
         unexpected = ["patch_embed.proj.weight", "patch_embed.proj.bias", "patch_embed.norm.weight", "patch_embed.norm.bias",
@@ -164,7 +164,7 @@ class PyramidFeatures(nn.Module):
         self.swin_transformer.load_state_dict(checkpoint)
         
         
-        resnet = eval(f"torchvision.models.{config.cnn_backbone}(pretrained={config.resnet_pretrained_path})")
+        resnet = eval(f"torchvision.models.{config.cnn_backbone}(pretrained={config.resnet_pretrained})")
         self.resnet_layers = nn.ModuleList(resnet.children())[:8]
         
         # Class Token
