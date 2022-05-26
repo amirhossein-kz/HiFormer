@@ -226,8 +226,10 @@ class All2Cross(nn.Module):
     def __init__(self, config, img_size = 224 , in_chans=3, embed_dim=(192, 384),
                  depth=([1, 4, 0], [1, 4, 0]), num_heads=(6, 6), mlp_ratio=(4., 4., 1.),
                  qkv_bias=False, qk_scale=None, drop_rate=0., attn_drop_rate=0.,
-                 drop_path_rate=0., norm_layer=nn.LayerNorm):
+                 drop_path_rate=0., norm_layer=nn.LayerNorm, cross_pos_embed = False):
         super().__init__()
+
+        self.cross_pos_embed = cross_pos_embed
         self.pyramid = PyramidFeatures(config=config, img_size= img_size, in_channels=in_chans)
         
         self.attention1 = Attention(embed_dim[0])
@@ -242,7 +244,8 @@ class All2Cross(nn.Module):
         num_patches = (n_p1, n_p2)
         self.num_branches = 2
         
-        
+        self.pos_embed = nn.ParameterList([nn.Parameter(torch.zeros(1, 1 + num_patches[i], embed_dim[i])) for i in range(self.num_branches)])
+
         total_depth = sum([sum(x[-2:]) for x in depth])
         dpr = [x.item() for x in torch.linspace(0, drop_path_rate, total_depth)]  # stochastic depth decay rule
         dpr_ptr = 0
@@ -259,7 +262,10 @@ class All2Cross(nn.Module):
         self.norm = nn.ModuleList([norm_layer(embed_dim[i]) for i in range(self.num_branches)])
 
         for i in range(self.num_branches):
+            if self.pos_embed[i].requires_grad:
+                trunc_normal_(self.pos_embed[i], std=.02)
             trunc_normal_(self.cls_token[i], std=.02)
+
         self.apply(self._init_weights)
     
     def _init_weights(self, m):
@@ -271,6 +277,13 @@ class All2Cross(nn.Module):
             nn.init.constant_(m.bias, 0)
             nn.init.constant_(m.weight, 1.0)
     
+    @torch.jit.ignore
+    def no_weight_decay(self):
+        out = {'cls_token'}
+        if self.pos_embed[0].requires_grad:
+            out.add('pos_embed')
+        return out
+
     def forward(self, x):
         B, C, H, W = x.shape
         cls_token_1_2 = self.cls_token[0].expand(B, -1, -1)
@@ -281,15 +294,16 @@ class All2Cross(nn.Module):
         concat1 = torch.cat((cls_token_1_2, concat1), dim = 1)
         concat2 = torch.cat((cls_token_3_4, concat2), dim = 1)
         
-        attn1 = self.attention1(concat1)
-        attn2 = self.attention2(concat2)
+        attn1 = self.attention1(concat1) + self.pos_embed[0] if self.cross_pos_embed else self.attention1(concat1)
+        attn2 = self.attention2(concat2) + self.pos_embed[1] if self.cross_pos_embed else self.attention2(concat2)
         
         xs = [attn1, attn2]
         
-        for blk in self.blocks:
+        for num, blk in enumerate(self.blocks):
             xs = blk(xs)
         xs = [self.norm[i](x) for i, x in enumerate(xs)]
-        out = [x[:, 0] for x in xs]
+        # out = [x[:, 0] for x in xs] # Class token
+        
         return xs
 
 

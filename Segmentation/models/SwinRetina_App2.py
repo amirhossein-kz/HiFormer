@@ -238,7 +238,7 @@ class PyramidFeatures(nn.Module):
 class All2Cross(nn.Module):
     def __init__(self, config, img_size = 224 , in_chans=3, embed_dim=(96, 768), norm_layer=nn.LayerNorm):
         super().__init__()
-
+        self.cross_pos_embed = config.cross_pos_embed
         self.pyramid = PyramidFeatures(config=config, img_size= img_size, in_channels=in_chans)
         
         n_p1 = (config.image_size // config.patch_size) ** 2       # default: 3136 
@@ -246,6 +246,7 @@ class All2Cross(nn.Module):
         num_patches = (n_p1, n_p2)
         self.num_branches = 2
         
+        self.pos_embed = nn.ParameterList([nn.Parameter(torch.zeros(1, 1 + num_patches[i], embed_dim[i])) for i in range(self.num_branches)])
         
         total_depth = sum([sum(x[-2:]) for x in config.depth])
         dpr = [x.item() for x in torch.linspace(0, config.drop_path_rate, total_depth)]  # stochastic depth decay rule
@@ -261,6 +262,11 @@ class All2Cross(nn.Module):
             self.blocks.append(blk)
 
         self.norm = nn.ModuleList([norm_layer(embed_dim[i]) for i in range(self.num_branches)])
+
+        for i in range(self.num_branches):
+            if self.pos_embed[i].requires_grad:
+                trunc_normal_(self.pos_embed[i], std=.02)
+
         self.apply(self._init_weights)
     
     def _init_weights(self, m):
@@ -271,9 +277,20 @@ class All2Cross(nn.Module):
         elif isinstance(m, nn.LayerNorm):
             nn.init.constant_(m.bias, 0)
             nn.init.constant_(m.weight, 1.0)
-    
+
+    @torch.jit.ignore
+    def no_weight_decay(self):
+        out = {'cls_token'}
+        if self.pos_embed[0].requires_grad:
+            out.add('pos_embed')
+        return out
+
     def forward(self, x):
         xs = self.pyramid(x)
+
+        if self.cross_pos_embed:
+          for i in range(self.num_branches):
+            xs[i] += self.pos_embed[i]
 
         for blk in self.blocks:
             xs = blk(xs)

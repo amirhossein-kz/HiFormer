@@ -30,6 +30,7 @@ def get_swin_res34_cfg():
     cfg.drop_path_rate = 0.
     cfg.qkv_bias = False
     cfg.qk_scale = None
+    cfg.cross_pos_embed = False
 
     return cfg
 
@@ -60,6 +61,7 @@ def get_swin_res50_cfg():
     cfg.drop_path_rate = 0.
     cfg.qkv_bias = False
     cfg.qk_scale = None
+    cfg.cross_pos_embed = False
 
     return cfg
 
@@ -90,5 +92,6 @@ def get_swin_res18_cfg():
     cfg.drop_path_rate = 0.
     cfg.qkv_bias = False
     cfg.qk_scale = None
-    
+    cfg.cross_pos_embed = False
+        
     return cfg
