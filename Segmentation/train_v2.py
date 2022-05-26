@@ -36,7 +36,7 @@ parser.add_argument('--img_size', type=int,
                     default=224, help='input patch size of network input')
 parser.add_argument('--seed', type=int,
                     default=1234, help='random seed')
-parser.add_argument('--output-dir', type=str,
+parser.add_argument('--output_dir', type=str,
                     default='./output', help='root dir for output log')
 parser.add_argument('--model_name', type=str,
                     default='Swin_Res34', help='[Swin_Res18, Swin_Res34, Swin_Res50]')

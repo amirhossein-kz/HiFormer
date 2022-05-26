@@ -236,11 +236,9 @@ class PyramidFeatures(nn.Module):
 
 
 class All2Cross(nn.Module):
-    def __init__(self, config, img_size = 224 , in_chans=3, embed_dim=(96, 768),
-                 depth=([1, 3, 1], [1, 3, 1]), num_heads=(6, 12), mlp_ratio=(2., 2., 4.),
-                 qkv_bias=False, qk_scale=None, drop_rate=0., attn_drop_rate=0.,
-                 drop_path_rate=0., norm_layer=nn.LayerNorm):
+    def __init__(self, config, img_size = 224 , in_chans=3, embed_dim=(96, 768), norm_layer=nn.LayerNorm):
         super().__init__()
+
         self.pyramid = PyramidFeatures(config=config, img_size= img_size, in_channels=in_chans)
         
         n_p1 = (config.image_size // config.patch_size) ** 2       # default: 3136 
@@ -249,16 +247,16 @@ class All2Cross(nn.Module):
         self.num_branches = 2
         
         
-        total_depth = sum([sum(x[-2:]) for x in depth])
-        dpr = [x.item() for x in torch.linspace(0, drop_path_rate, total_depth)]  # stochastic depth decay rule
+        total_depth = sum([sum(x[-2:]) for x in config.depth])
+        dpr = [x.item() for x in torch.linspace(0, config.drop_path_rate, total_depth)]  # stochastic depth decay rule
         dpr_ptr = 0
         self.blocks = nn.ModuleList()
-        for idx, block_config in enumerate(depth):
+        for idx, block_config in enumerate(config.depth):
             curr_depth = max(block_config[:-1]) + block_config[-1]
             dpr_ = dpr[dpr_ptr:dpr_ptr + curr_depth]
-            blk = MultiScaleBlock(embed_dim, num_patches, block_config, num_heads=num_heads, mlp_ratio=mlp_ratio,
-                                  qkv_bias=qkv_bias, qk_scale=qk_scale, drop=drop_rate, attn_drop=attn_drop_rate, drop_path=dpr_,
-                                  norm_layer=norm_layer)
+            blk = MultiScaleBlock(embed_dim, num_patches, block_config, num_heads=config.num_heads, mlp_ratio=config.mlp_ratio,
+                                  qkv_bias=config.qkv_bias, qk_scale=config.qk_scale, drop=config.drop_rate, 
+                                  attn_drop=config.attn_drop_rate, drop_path=dpr_, norm_layer=norm_layer)
             dpr_ptr += curr_depth
             self.blocks.append(blk)
 
@@ -280,7 +278,7 @@ class All2Cross(nn.Module):
         for blk in self.blocks:
             xs = blk(xs)
         xs = [self.norm[i](x) for i, x in enumerate(xs)]
-        out = [x[:, 0] for x in xs]
+        # out = [x[:, 0] for x in xs] # Class token
 
         return xs
 

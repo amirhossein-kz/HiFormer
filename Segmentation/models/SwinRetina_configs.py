@@ -21,6 +21,16 @@ def get_swin_res34_cfg():
         wget.download("https://github.com/SwinTransformer/storage/releases/download/v1.0.0/swin_tiny_patch4_window7_224.pth", "./weights/swin_tiny_patch4_window7_224.pth")    
     cfg.swin_pretrained_path = './weights/swin_tiny_patch4_window7_224.pth'
 
+    # Cross Attention Config
+    cfg.depth = ([1, 3, 1], [1, 3, 1])
+    cfg.num_heads = (6, 12)
+    cfg.mlp_ratio=(2., 2., 4.)
+    cfg.drop_rate = 0.
+    cfg.attn_drop_rate = 0.
+    cfg.drop_path_rate = 0.
+    cfg.qkv_bias = False
+    cfg.qk_scale = None
+
     return cfg
 
 def get_swin_res50_cfg():
@@ -40,6 +50,16 @@ def get_swin_res50_cfg():
         print('Downloading Swin-transformer model ...')
         wget.download("https://github.com/SwinTransformer/storage/releases/download/v1.0.0/swin_tiny_patch4_window7_224.pth", "./weights/swin_tiny_patch4_window7_224.pth")    
     cfg.swin_pretrained_path = './weights/swin_tiny_patch4_window7_224.pth'
+    
+    # Cross Attention Config
+    cfg.depth = ([1, 3, 1], [1, 3, 1])
+    cfg.num_heads = (6, 12)
+    cfg.mlp_ratio=(2., 2., 4.)
+    cfg.drop_rate = 0.
+    cfg.attn_drop_rate = 0.
+    cfg.drop_path_rate = 0.
+    cfg.qkv_bias = False
+    cfg.qk_scale = None
 
     return cfg
 
@@ -60,5 +80,15 @@ def get_swin_res18_cfg():
         print('Downloading Swin-transformer model ...')    
         wget.download("https://github.com/SwinTransformer/storage/releases/download/v1.0.0/swin_tiny_patch4_window7_224.pth", "./weights/swin_tiny_patch4_window7_224.pth")    
     cfg.swin_pretrained_path = './weights/swin_tiny_patch4_window7_224.pth'
+
+    # Cross Attention Config
+    cfg.depth = ([1, 3, 1], [1, 3, 1])
+    cfg.num_heads = (6, 12)
+    cfg.mlp_ratio=(2., 2., 4.)
+    cfg.drop_rate = 0.
+    cfg.attn_drop_rate = 0.
+    cfg.drop_path_rate = 0.
+    cfg.qkv_bias = False
+    cfg.qk_scale = None
     
     return cfg
