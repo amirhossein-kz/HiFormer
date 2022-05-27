@@ -67,6 +67,10 @@ def plot_result(dice, h, snapshot_path,args):
 
 def trainer_synapse(args, model, snapshot_path):
     date_and_time = datetime.datetime.now()
+
+    os.makedirs(os.path.join(snapshot_path, 'test'), exist_ok=True)
+    test_save_path = os.path.join(snapshot_path, 'test')
+    
     logging.basicConfig(filename=snapshot_path + f"/{args.model_name}" + str(date_and_time) + "_log.txt", level=logging.INFO,
                         format='[%(asctime)s.%(msecs)03d] %(message)s', datefmt='%H:%M:%S')
     logging.getLogger().addHandler(logging.StreamHandler(sys.stdout))
@@ -133,7 +137,7 @@ def trainer_synapse(args, model, snapshot_path):
 
             logging.info('iteration %d : loss : %f, loss_ce: %f loss_dice: %f' % (iter_num, loss.item(), loss_ce.item(), loss_dice.item()))
 
-            if iter_num % 20 == 0:
+            if iter_num % 10 == 0:
                 image = image_batch[1, 0:1, :, :]
                 image = (image - image.min()) / (image.max() - image.min())
                 writer.add_image('train/Image', image, iter_num)
@@ -151,7 +155,7 @@ def trainer_synapse(args, model, snapshot_path):
             logging.info("*" * 20)
             logging.info(f"Running Inference after epoch {epoch_num}")
             print(f"Epoch {epoch_num}")
-            mean_dice,mean_hd95 = infer(model, testloader, args, test_save_path=None)
+            mean_dice,mean_hd95 = infer(model, testloader, args, test_save_path=test_save_path)
             dice_.append(mean_dice)
             hd95_.append(mean_hd95)
             model.train()
@@ -166,7 +170,7 @@ def trainer_synapse(args, model, snapshot_path):
                 logging.info("*" * 20)
                 logging.info(f"Running Inference after epoch {epoch_num} (Last Epoch)")
                 print(f"Epoch {epoch_num}, Last Epcoh")
-                mean_dice,mean_hd95 = infer(model, testloader, args, test_save_path=None)
+                mean_dice,mean_hd95 = infer(model, testloader, args, test_save_path=test_save_path)
                 dice_.append(mean_dice)
                 hd95_.append(mean_hd95)
                 model.train()
