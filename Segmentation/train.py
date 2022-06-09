@@ -37,7 +37,7 @@ parser.add_argument('--img_size', type=int,
 parser.add_argument('--seed', type=int,
                     default=1234, help='random seed')
 parser.add_argument('--output_dir', type=str,
-                    default='./output', help='root dir for output log')
+                    default='./output_v1', help='root dir for output log')
 parser.add_argument('--model_name', type=str,
                     default='Swin_Res34', help='[Swin_Res18, Swin_Res34, Swin_Res50]')
 parser.add_argument('--eval_interval', type=int,
@@ -47,6 +47,7 @@ parser.add_argument('--z_spacing', type=int,
 
 args = parser.parse_args()
 
+args.output_dir = args.output_dir + f'/{args.model_name}'
 os.makedirs(args.output_dir, exist_ok=True)
 
 
