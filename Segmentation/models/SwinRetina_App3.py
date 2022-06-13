@@ -3,12 +3,11 @@ import numpy as np
 import torch.nn as nn
 import torch.utils.checkpoint as checkpoint
 import torchvision
-from timm.models.layers import trunc_normal_
+from timm.models.layers import DropPath, to_2tuple, trunc_normal_
 from utils import *
 from einops import rearrange, repeat
 from einops.layers.torch import Rearrange
 from torch.nn import functional as F
-from functools import partial
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -139,6 +138,7 @@ class PyramidFeatures(nn.Module):
                      "layers.0.downsample.reduction.weight", "layers.1.downsample.norm.weight", "layers.1.downsample.norm.bias",
                      "layers.1.downsample.reduction.weight", "layers.2.downsample.norm.weight", "layers.2.downsample.norm.bias",
                      "layers.2.downsample.reduction.weight", "norm.weight", "norm.bias"]
+
         
         resnet = eval(f"torchvision.models.{config.cnn_backbone}(pretrained={config.resnet_pretrained})")
         self.resnet_layers = nn.ModuleList(resnet.children())[:7]
@@ -150,7 +150,7 @@ class PyramidFeatures(nn.Module):
         self.p1_pm = PatchMerging((config.image_size // config.patch_size, config.image_size // config.patch_size), config.swin_pyramid_fm[0])
         self.p1_pm.state_dict()['reduction.weight'][:]= checkpoint["layers.0.downsample.reduction.weight"]
         self.p1_pm.state_dict()['norm.weight'][:]= checkpoint["layers.0.downsample.norm.weight"]
-        self.p1_pm.state_dict()['norm.bias'][:]= checkpoint["layers.0.downsample.norm.bias"]      
+        self.p1_pm.state_dict()['norm.bias'][:]= checkpoint["layers.0.downsample.norm.bias"]        
         self.skip_CLS_1 = SkipCLS(dim=config.swin_pyramid_fm[0], factor=2)
 
         self.p2 = self.resnet_layers[5]
@@ -158,7 +158,7 @@ class PyramidFeatures(nn.Module):
         self.p2_pm = PatchMerging((config.image_size // config.patch_size // 2, config.image_size // config.patch_size // 2), config.swin_pyramid_fm[1])
         self.p2_pm.state_dict()['reduction.weight'][:]= checkpoint["layers.1.downsample.reduction.weight"]
         self.p2_pm.state_dict()['norm.weight'][:]= checkpoint["layers.1.downsample.norm.weight"]
-        self.p2_pm.state_dict()['norm.bias'][:]= checkpoint["layers.1.downsample.norm.bias"]            
+        self.p2_pm.state_dict()['norm.bias'][:]= checkpoint["layers.1.downsample.norm.bias"]           
         self.skip_CLS_2 = SkipCLS(dim=config.swin_pyramid_fm[1], factor=2)
         
         self.p3 = self.resnet_layers[6]
@@ -169,6 +169,7 @@ class PyramidFeatures(nn.Module):
                 del checkpoint[key]
         self.swin_transformer.load_state_dict(checkpoint)
 
+
         trunc_normal_(self.cls_token, std=.02)
 
     def forward(self, x):
@@ -178,7 +179,6 @@ class PyramidFeatures(nn.Module):
         
         B, C, H, W = x.shape
         CLS = self.cls_token.expand(B, -1, -1)
-        sw1_CLS = CLS
 
         # 1
         fm1 = x
@@ -187,6 +187,7 @@ class PyramidFeatures(nn.Module):
         sw1 = self.swin_transformer.layers[0](fm1_reshaped)
         sw1_skipped = fm1_reshaped  + sw1
         CLS = self.skip_CLS_1(embeddings=sw1_skipped, CLS=CLS)
+        sw1_CLS = CLS
         fm1_sw1 = self.p1_pm(sw1_skipped)
         
         #2
@@ -206,16 +207,16 @@ class PyramidFeatures(nn.Module):
         fm3_sw3_skipped = fm3_reshaped  + fm2_sw3
 
 
-        return [torch.cat((sw1_CLS, sw1_skipped), dim=1), torch.cat((CLS, fm3_sw3_skipped), dim=1)]
+        return [torch.cat((sw1_CLS, fm2_sw2_skipped), dim=1), torch.cat((CLS, fm3_sw3_skipped), dim=1)]
 
 
 class All2Cross(nn.Module):
-    def __init__(self, config, img_size = 224 , in_chans=3, embed_dim=(96, 384), norm_layer=partial(nn.LayerNorm, eps=1e-6)):
+    def __init__(self, config, img_size = 224 , in_chans=3, embed_dim=(192, 384), norm_layer=nn.LayerNorm):
         super().__init__()
         self.cross_pos_embed = config.cross_pos_embed
         self.pyramid = PyramidFeatures(config=config, img_size= img_size, in_channels=in_chans)
         
-        n_p1 = (config.image_size // config.patch_size) ** 2       # default: 3136 
+        n_p1 = (config.image_size // config.patch_size // 2) ** 2  # default: 784 
         n_p2 = (config.image_size // config.patch_size // 4) ** 2  # default: 196 
         num_patches = (n_p1, n_p2)
         self.num_branches = 2
@@ -306,17 +307,17 @@ class SegmentationHead(nn.Sequential):
         super().__init__(conv2d)
 
 
-class SwinRetina_V2(nn.Module):
+class SwinRetina_V3(nn.Module):
     def __init__(self, config, img_size=224, in_chans=3, n_classes=9):
         super().__init__()
         self.img_size = img_size
-        self.patch_size = [4, 16]
+        self.patch_size = [8, 16]
         self.n_classes = n_classes
         self.All2Cross = All2Cross(config = config, img_size= img_size, in_chans=in_chans)
         
-        self.ConvUp_s = ConvUpsample(in_chans=384, out_chans=[128,128])
-        self.ConvUp_l = ConvUpsample(in_chans=96, out_chans=[128], upsample=False)
-        
+        self.ConvUp_s = ConvUpsample(in_chans=384, out_chans=[128,128], upsample=True)
+        self.ConvUp_l = ConvUpsample(in_chans=192, out_chans=[128], upsample=True)
+    
         self.segmentation_head = SegmentationHead(
             in_channels=16,
             out_channels=n_classes,
@@ -328,7 +329,7 @@ class SwinRetina_V2(nn.Module):
                 128, 16,
                 kernel_size=1, stride=1,
                 padding=0, bias=True),
-#             nn.GroupNorm(8, self.n_classes), 
+            # nn.GroupNorm(8, 16), 
             nn.GELU(),
             nn.Upsample(scale_factor=4, mode='bilinear', align_corners=False)
         )
@@ -343,6 +344,7 @@ class SwinRetina_V2(nn.Module):
             embed = self.ConvUp_l(embed) if i == 0 else self.ConvUp_s(embed)
             
             reshaped_embed.append(embed)
+
         C = reshaped_embed[0] + reshaped_embed[1]
         C = self.conv_pred(C)
 

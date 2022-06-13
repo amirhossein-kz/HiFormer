@@ -92,7 +92,7 @@ def trainer_synapse(args, model, snapshot_path):
     def worker_init_fn(worker_id):
         random.seed(args.seed + worker_id)
 
-    trainloader = DataLoader(db_train, batch_size=batch_size, shuffle=True, num_workers=8, pin_memory=True,
+    trainloader = DataLoader(db_train, batch_size=batch_size, shuffle=True, num_workers=args.num_workers, pin_memory=True,
                              worker_init_fn=worker_init_fn)
     if args.n_gpu > 1:
         model = nn.DataParallel(model)
@@ -125,9 +125,19 @@ def trainer_synapse(args, model, snapshot_path):
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
+
             lr_ = base_lr * (1.0 - iter_num / max_iterations) ** 0.9
             for param_group in optimizer.param_groups:
-                param_group['lr'] = lr_
+                    param_group['lr'] = lr_
+
+            if epoch_num == 1:
+                base_lr = 0.01
+
+            if epoch_num == 20:
+                base_lr = base_lr / 2
+
+            if epoch_num == 60:
+                base_lr = base_lr / 2
 
             iter_num = iter_num + 1
             writer.add_scalar('info/lr', lr_, iter_num)
