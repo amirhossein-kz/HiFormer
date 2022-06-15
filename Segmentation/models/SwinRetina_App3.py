@@ -112,20 +112,6 @@ class SwinTransformer(nn.Module):
         return {'relative_position_bias_table'}
 
 
-class SkipCLS(nn.Module):
-    def __init__(self, dim, factor):
-        super().__init__()
-        self.dim = dim
-        self.factor = factor
-        
-        self.multi_head_attention = Attention(dim=self.dim, factor=self.factor)
-        
-    def forward(self,embeddings, CLS):
-        in_MSA = torch.cat((CLS, embeddings), dim = 1)
-        MSA_out = self.multi_head_attention(in_MSA)
-        return MSA_out[:,0].unsqueeze(1)
-
-
 class PyramidFeatures(nn.Module):
     def __init__(self, config, img_size = 224, in_channels=3):
         super().__init__()
@@ -143,15 +129,13 @@ class PyramidFeatures(nn.Module):
         resnet = eval(f"torchvision.models.{config.cnn_backbone}(pretrained={config.resnet_pretrained})")
         self.resnet_layers = nn.ModuleList(resnet.children())[:7]
         
-        # Class Token
-        self.cls_token = nn.Parameter(torch.zeros(1,1,config.swin_pyramid_fm[0]))
-
         self.p1_ch = nn.Conv2d(config.cnn_pyramid_fm[0], config.swin_pyramid_fm[0] , kernel_size = 1)
         self.p1_pm = PatchMerging((config.image_size // config.patch_size, config.image_size // config.patch_size), config.swin_pyramid_fm[0])
         self.p1_pm.state_dict()['reduction.weight'][:]= checkpoint["layers.0.downsample.reduction.weight"]
         self.p1_pm.state_dict()['norm.weight'][:]= checkpoint["layers.0.downsample.norm.weight"]
         self.p1_pm.state_dict()['norm.bias'][:]= checkpoint["layers.0.downsample.norm.bias"]        
-        self.skip_CLS_1 = SkipCLS(dim=config.swin_pyramid_fm[0], factor=2)
+        self.norm_1 = nn.LayerNorm(config.swin_pyramid_fm[0])
+        self.avgpool_1 = nn.AdaptiveAvgPool1d(1) 
 
         self.p2 = self.resnet_layers[5]
         self.p2_ch = nn.Conv2d(config.cnn_pyramid_fm[1], config.swin_pyramid_fm[1] , kernel_size = 1)
@@ -159,10 +143,12 @@ class PyramidFeatures(nn.Module):
         self.p2_pm.state_dict()['reduction.weight'][:]= checkpoint["layers.1.downsample.reduction.weight"]
         self.p2_pm.state_dict()['norm.weight'][:]= checkpoint["layers.1.downsample.norm.weight"]
         self.p2_pm.state_dict()['norm.bias'][:]= checkpoint["layers.1.downsample.norm.bias"]           
-        self.skip_CLS_2 = SkipCLS(dim=config.swin_pyramid_fm[1], factor=2)
         
         self.p3 = self.resnet_layers[6]
         self.p3_ch = nn.Conv2d(config.cnn_pyramid_fm[2] , config.swin_pyramid_fm[2] , kernel_size =  1)  
+        self.norm_2 = nn.LayerNorm(config.swin_pyramid_fm[2])
+        self.avgpool_2 = nn.AdaptiveAvgPool1d(1)    
+
 
         for key in list(checkpoint.keys()):
             if key in unexpected or 'layers.3' in key:
@@ -170,15 +156,10 @@ class PyramidFeatures(nn.Module):
         self.swin_transformer.load_state_dict(checkpoint)
 
 
-        trunc_normal_(self.cls_token, std=.02)
-
     def forward(self, x):
         
         for i in range(5):
             x = self.resnet_layers[i](x) 
-        
-        B, C, H, W = x.shape
-        CLS = self.cls_token.expand(B, -1, -1)
 
         # 1
         fm1 = x
@@ -186,8 +167,9 @@ class PyramidFeatures(nn.Module):
         fm1_reshaped = Rearrange('b c h w -> b (h w) c')(fm1_ch)               
         sw1 = self.swin_transformer.layers[0](fm1_reshaped)
         sw1_skipped = fm1_reshaped  + sw1
-        CLS = self.skip_CLS_1(embeddings=sw1_skipped, CLS=CLS)
-        sw1_CLS = CLS
+        norm1 = self.norm_1(sw1_skipped) 
+        sw1_CLS = self.avgpool_1(norm1.transpose(1, 2))
+        sw1_CLS_reshaped = Rearrange('b c 1 -> b 1 c')(sw1_CLS) 
         fm1_sw1 = self.p1_pm(sw1_skipped)
         
         #2
@@ -196,7 +178,6 @@ class PyramidFeatures(nn.Module):
         fm2_ch = self.p2_ch(fm2)
         fm2_reshaped = Rearrange('b c h w -> b (h w) c')(fm2_ch) 
         fm2_sw2_skipped = fm2_reshaped  + fm1_sw2
-        CLS = self.skip_CLS_2(embeddings=fm2_sw2_skipped, CLS=CLS)
         fm2_sw2 = self.p2_pm(fm2_sw2_skipped)
     
         #3
@@ -205,18 +186,20 @@ class PyramidFeatures(nn.Module):
         fm3_ch = self.p3_ch(fm3)
         fm3_reshaped = Rearrange('b c h w -> b (h w) c')(fm3_ch) 
         fm3_sw3_skipped = fm3_reshaped  + fm2_sw3
+        norm2 = self.norm_2(fm3_sw3_skipped) 
+        sw3_CLS = self.avgpool_2(norm2.transpose(1, 2))
+        sw3_CLS_reshaped = Rearrange('b c 1 -> b 1 c')(sw3_CLS) 
 
-
-        return [torch.cat((sw1_CLS, fm2_sw2_skipped), dim=1), torch.cat((CLS, fm3_sw3_skipped), dim=1)]
+        return [torch.cat((sw1_CLS_reshaped, norm1), dim=1), torch.cat((sw3_CLS_reshaped, norm2), dim=1)]
 
 
 class All2Cross(nn.Module):
-    def __init__(self, config, img_size = 224 , in_chans=3, embed_dim=(192, 384), norm_layer=nn.LayerNorm):
+    def __init__(self, config, img_size = 224 , in_chans=3, embed_dim=(96, 384), norm_layer=nn.LayerNorm):
         super().__init__()
         self.cross_pos_embed = config.cross_pos_embed
         self.pyramid = PyramidFeatures(config=config, img_size= img_size, in_channels=in_chans)
         
-        n_p1 = (config.image_size // config.patch_size // 2) ** 2  # default: 784 
+        n_p1 = (config.image_size // config.patch_size     ) ** 2  # default: 3136 
         n_p2 = (config.image_size // config.patch_size // 4) ** 2  # default: 196 
         num_patches = (n_p1, n_p2)
         self.num_branches = 2
@@ -290,7 +273,7 @@ class ConvUpsample(nn.Module):
                 padding=1, bias=False
             ))
             self.conv_tower.append(nn.GroupNorm(32, out_ch))
-            self.conv_tower.append(nn.GELU())
+            self.conv_tower.append(nn.ReLU(inplace=False))
             if upsample:
                 self.conv_tower.append(nn.Upsample(
                         scale_factor=2, mode='bilinear', align_corners=False))
@@ -311,12 +294,12 @@ class SwinRetina_V3(nn.Module):
     def __init__(self, config, img_size=224, in_chans=3, n_classes=9):
         super().__init__()
         self.img_size = img_size
-        self.patch_size = [8, 16]
+        self.patch_size = [4, 16]
         self.n_classes = n_classes
         self.All2Cross = All2Cross(config = config, img_size= img_size, in_chans=in_chans)
         
         self.ConvUp_s = ConvUpsample(in_chans=384, out_chans=[128,128], upsample=True)
-        self.ConvUp_l = ConvUpsample(in_chans=192, out_chans=[128], upsample=True)
+        self.ConvUp_l = ConvUpsample(in_chans=96, upsample=False)
     
         self.segmentation_head = SegmentationHead(
             in_channels=16,
@@ -330,7 +313,7 @@ class SwinRetina_V3(nn.Module):
                 kernel_size=1, stride=1,
                 padding=0, bias=True),
             # nn.GroupNorm(8, 16), 
-            nn.GELU(),
+            nn.ReLU(inplace=True),
             nn.Upsample(scale_factor=4, mode='bilinear', align_corners=False)
         )
     

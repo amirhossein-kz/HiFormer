@@ -121,7 +121,7 @@ def trainer_synapse(args, model, snapshot_path):
             outputs = model(image_batch)
             loss_ce = ce_loss(outputs, label_batch[:].long())
             loss_dice = dice_loss(outputs, label_batch, softmax=True)
-            loss = 0.5 * loss_ce + 0.5 * loss_dice
+            loss = 0.4 * loss_ce + 0.6 * loss_dice
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
@@ -130,14 +130,9 @@ def trainer_synapse(args, model, snapshot_path):
             for param_group in optimizer.param_groups:
                     param_group['lr'] = lr_
 
-            if epoch_num == 1:
-                base_lr = 0.01
-
             if epoch_num == 20:
                 base_lr = base_lr / 2
 
-            if epoch_num == 60:
-                base_lr = base_lr / 2
 
             iter_num = iter_num + 1
             writer.add_scalar('info/lr', lr_, iter_num)
@@ -147,14 +142,16 @@ def trainer_synapse(args, model, snapshot_path):
 
             logging.info('iteration %d : loss : %f, loss_ce: %f loss_dice: %f' % (iter_num, loss.item(), loss_ce.item(), loss_dice.item()))
 
-            if iter_num % 10 == 0:
-                image = image_batch[1, 0:1, :, :]
-                image = (image - image.min()) / (image.max() - image.min())
-                writer.add_image('train/Image', image, iter_num)
-                outputs = torch.argmax(torch.softmax(outputs, dim=1), dim=1, keepdim=True)
-                writer.add_image('train/Prediction', outputs[1, ...] * 50, iter_num)
-                labs = label_batch[1, ...].unsqueeze(0) * 50
-                writer.add_image('train/GroundTruth', labs, iter_num)
+            try:
+                if iter_num % 10 == 0:
+                    image = image_batch[1, 0:1, :, :]
+                    image = (image - image.min()) / (image.max() - image.min())
+                    writer.add_image('train/Image', image, iter_num)
+                    outputs = torch.argmax(torch.softmax(outputs, dim=1), dim=1, keepdim=True)
+                    writer.add_image('train/Prediction', outputs[1, ...] * 50, iter_num)
+                    labs = label_batch[1, ...].unsqueeze(0) * 50
+                    writer.add_image('train/GroundTruth', labs, iter_num)
+            except: pass
 
         if (epoch_num + 1) % args.eval_interval == 0:
             filename = f'{args.model_name}_epoch_{epoch_num}.pth'
