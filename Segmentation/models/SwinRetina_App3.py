@@ -190,7 +190,7 @@ class PyramidFeatures(nn.Module):
         sw3_CLS = self.avgpool_2(norm2.transpose(1, 2))
         sw3_CLS_reshaped = Rearrange('b c 1 -> b 1 c')(sw3_CLS) 
 
-        return [torch.cat((sw1_CLS_reshaped, norm1), dim=1), torch.cat((sw3_CLS_reshaped, norm2), dim=1)]
+        return [torch.cat((sw1_CLS_reshaped, sw1_skipped), dim=1), torch.cat((sw3_CLS_reshaped, fm3_sw3_skipped), dim=1)]
 
 
 class All2Cross(nn.Module):
