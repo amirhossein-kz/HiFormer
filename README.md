@@ -2,16 +2,19 @@
 
 ## Approach 2
 Config 1:
+
+Batch Size 10 works in Kaggle.
 ```
 $ cd Segmentation
 $ pip install -r requirements.txt
-$ python train_v2.py --root_path [train dataset path]/.../train_npz \
+$ python train_v3.py --root_path [train dataset path]/.../train_npz \
                      --test_path [test dataset path]/.../test_vol_h5 \
                      --batch_size 24 \
                      --eval_interval 20 \
-                     --base_lr 0.001 \
+                     --base_lr 0.01 \
                      --max_epochs 301 \
                      --model_name 'Swin_Res34' \
+                     --num_workers 2 \
 
 ```
 
@@ -19,28 +22,28 @@ Config 2:
 ```
 $ cd Segmentation
 $ pip install -r requirements.txt
-$ python train_v2.py --root_path [train dataset path]/.../train_npz \
+$ python train_v3.py --root_path [train dataset path]/.../train_npz \
                      --test_path [test dataset path]/.../test_vol_h5 \
                      --batch_size 24 \
                      --eval_interval 20 \
-                     --base_lr 0.001 \
+                     --base_lr 0.01 \
                      --max_epochs 301 \
                      --model_name 'Swin_Res50' \
-
+                     --num_workers 2 \
 ```
 
 Config 3:
 ```
 $ cd Segmentation
 $ pip install -r requirements.txt
-$ python train_v2.py --root_path [train dataset path]/.../train_npz \
+$ python train_v3.py --root_path [train dataset path]/.../train_npz \
                      --test_path [test dataset path]/.../test_vol_h5 \
                      --batch_size 24 \
                      --eval_interval 20 \
-                     --base_lr 0.001 \
+                     --base_lr 0.01 \
                      --max_epochs 301 \
                      --model_name 'Swin_Res18' \
-
+                     --num_workers 2 \
 ```
 
 ## Approach 1
