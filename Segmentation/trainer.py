@@ -130,10 +130,6 @@ def trainer_synapse(args, model, snapshot_path):
             for param_group in optimizer.param_groups:
                     param_group['lr'] = lr_
 
-            if epoch_num == 20:
-                base_lr = base_lr / 2
-
-
             iter_num = iter_num + 1
             writer.add_scalar('info/lr', lr_, iter_num)
             writer.add_scalar('info/total_loss', loss, iter_num)

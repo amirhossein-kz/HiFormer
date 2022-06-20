@@ -22,9 +22,9 @@ def get_swin_res34_cfg():
     cfg.swin_pretrained_path = './weights/swin_tiny_patch4_window7_224.pth'
 
     # Cross Attention Config
-    cfg.depth = [[1, 3, 1]]
+    cfg.depth = [[1, 1]]
     cfg.num_heads = (6, 12)
-    cfg.mlp_ratio=(2., 2., 4.)
+    cfg.mlp_ratio=(1., 1.)
     cfg.drop_rate = 0.
     cfg.attn_drop_rate = 0.
     cfg.drop_path_rate = 0.
