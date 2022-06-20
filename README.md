@@ -1,8 +1,9 @@
 # SwinRetina paper
+All configurations are available in the Run.txt file.
+
+Batch Size 10 works in Kaggle and Colab.
 
 Config 1:
-
-Batch Size 10 works in Kaggle.
 ```
 $ cd Segmentation
 $ pip install -r requirements.txt
