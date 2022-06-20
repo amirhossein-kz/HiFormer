@@ -42,7 +42,7 @@ parser.add_argument('--output_dir', type=str,
 parser.add_argument('--model_name', type=str,
                     default='swin_res34_cv_11_11_612_true_cfg', help='[Swin_Res18, Swin_Res34, Swin_Res50]')
 parser.add_argument('--eval_interval', type=int,
-                    default=50, help='evaluation epoch')
+                    default=20, help='evaluation epoch')
 parser.add_argument('--z_spacing', type=int,
                     default=1, help='z_spacing')
 
