@@ -23,13 +23,13 @@ parser.add_argument('--num_classes', type=int,
 parser.add_argument('--max_iterations', type=int,
                     default=30000, help='maximum epoch number to train')
 parser.add_argument('--max_epochs', type=int,
-                    default=201, help='maximum epoch number to train')
+                    default=401, help='maximum epoch number to train')
 parser.add_argument('--batch_size', type=int,
-                    default=24, help='batch_size per gpu')
+                    default=10, help='batch_size per gpu')
 parser.add_argument('--n_gpu', type=int, default=1, help='total gpu')
 parser.add_argument('--deterministic', type=int,  default=1,
                     help='whether use deterministic training')
-parser.add_argument('--base_lr', type=float,  default=0.001,
+parser.add_argument('--base_lr', type=float,  default=0.01,
                     help='segmentation network learning rate')
 parser.add_argument('--num_workers', type=int,  default=2,
                     help='number of workers')
@@ -38,7 +38,7 @@ parser.add_argument('--img_size', type=int,
 parser.add_argument('--seed', type=int,
                     default=1234, help='random seed')
 parser.add_argument('--output_dir', type=str,
-                    default='./output_v2', help='root dir for output log')
+                    default='./results', help='root dir for output log')
 parser.add_argument('--model_name', type=str,
                     default='swin_res34_cv_11_11_612_true_cfg', help='[Swin_Res18, Swin_Res34, Swin_Res50]')
 parser.add_argument('--eval_interval', type=int,
@@ -50,6 +50,7 @@ args = parser.parse_args()
 
 args.output_dir = args.output_dir + f'/{args.model_name}'
 os.makedirs(args.output_dir, exist_ok=True)
+os.makedirs('./logs', exist_ok=True)
 
 
 if __name__ == "__main__":
@@ -87,8 +88,10 @@ if __name__ == "__main__":
         'swin_res34_cv_140_441_66_true_cfg' : configs.get_swin_res34_cv_140_441_66_true_cfg(),
         'swin_res50_cv_110_111_612_true_cfg': configs.get_swin_res50_cv_110_111_612_true_cfg(),
         'swin_res50_cv_120_221_612_true_cfg': configs.get_swin_res50_cv_120_221_612_true_cfg(),
+        'swin_res50_cv_120_221_66_true_cfg' : configs.get_swin_res50_cv_120_221_66_true_cfg(),
         'swin_res50_cv_130_331_66_true_cfg' : configs.get_swin_res50_cv_130_331_66_true_cfg(),
         'swin_res50_cv_120_111_612_true_cfg': configs.get_swin_res50_cv_120_111_612_true_cfg(),
+        'swin_res50_cv_120_111_66_true_cfg' : configs.get_swin_res50_cv_120_111_66_true_cfg(),
         'swin_res50_cv_11_11_612_true_cfg'  : configs.get_swin_res50_cv_11_11_612_true_cfg(),
         'swin_res18_cv_11_11_612_true_cfg'  : configs.get_swin_res18_cv_11_11_612_true_cfg(),
     }

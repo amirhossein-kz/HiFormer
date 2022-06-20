@@ -17,9 +17,6 @@ from torchvision import transforms
 import matplotlib.pyplot as plt
 import pandas as pd
 import datetime
-import datetime
-import pandas as pd
-import matplotlib.pyplot as plt
 from datasets.dataset_synapse import Synapse_dataset, RandomGenerator
 
 
