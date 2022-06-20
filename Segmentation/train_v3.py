@@ -31,7 +31,7 @@ parser.add_argument('--deterministic', type=int,  default=1,
                     help='whether use deterministic training')
 parser.add_argument('--base_lr', type=float,  default=0.001,
                     help='segmentation network learning rate')
-parser.add_argument('--num_workers', type=int,  default=8,
+parser.add_argument('--num_workers', type=int,  default=2,
                     help='number of workers')
 parser.add_argument('--img_size', type=int,
                     default=224, help='input patch size of network input')
@@ -40,7 +40,7 @@ parser.add_argument('--seed', type=int,
 parser.add_argument('--output_dir', type=str,
                     default='./output_v2', help='root dir for output log')
 parser.add_argument('--model_name', type=str,
-                    default='Swin_Res34', help='[Swin_Res18, Swin_Res34, Swin_Res50]')
+                    default='swin_res34_cv_11_11_612_true_cfg', help='[Swin_Res18, Swin_Res34, Swin_Res50]')
 parser.add_argument('--eval_interval', type=int,
                     default=50, help='evaluation epoch')
 parser.add_argument('--z_spacing', type=int,
@@ -75,9 +75,22 @@ if __name__ == "__main__":
     }
 
     CONFIGS = {
-        'Swin_Res34': configs.get_swin_res34_cfg(),
-        'Swin_Res50': configs.get_swin_res50_cfg(),
-        'Swin_Res18': configs.get_swin_res18_cfg(),
+        'swin_res34_cv_11_11_612_true_cfg'  : configs.get_swin_res34_cv_11_11_612_true_cfg(),
+        'swin_res34_cv_120_221_612_true_cfg': configs.get_swin_res34_cv_120_221_612_true_cfg(),
+        'swin_res34_cv_120_111_612_true_cfg': configs.get_swin_res34_cv_120_111_612_true_cfg(),
+        'swin_res34_cv_120_221_66_true_cfg' : configs.get_swin_res34_cv_120_221_66_true_cfg(),
+        'swin_res34_cv_11_11_44_true_cfg'   : configs.get_swin_res34_cv_11_11_44_true_cfg(),
+        'swin_res34_cv_11_11_33_true_cfg'   : configs.get_swin_res34_cv_11_11_33_true_cfg(),
+        'swin_res34_cv_110_111_612_true_cfg': configs.get_swin_res34_cv_110_111_612_true_cfg(),
+        'swin_res34_cv_130_331_66_true_cfg' : configs.get_swin_res34_cv_130_331_66_true_cfg(),
+        'swin_res34_cv_110_221_612_true_cfg': configs.get_swin_res34_cv_110_221_612_true_cfg(),
+        'swin_res34_cv_140_441_66_true_cfg' : configs.get_swin_res34_cv_140_441_66_true_cfg(),
+        'swin_res50_cv_110_111_612_true_cfg': configs.get_swin_res50_cv_110_111_612_true_cfg(),
+        'swin_res50_cv_120_221_612_true_cfg': configs.get_swin_res50_cv_120_221_612_true_cfg(),
+        'swin_res50_cv_130_331_66_true_cfg' : configs.get_swin_res50_cv_130_331_66_true_cfg(),
+        'swin_res50_cv_120_111_612_true_cfg': configs.get_swin_res50_cv_120_111_612_true_cfg(),
+        'swin_res50_cv_11_11_612_true_cfg'  : configs.get_swin_res50_cv_11_11_612_true_cfg(),
+        'swin_res18_cv_11_11_612_true_cfg'  : configs.get_swin_res18_cv_11_11_612_true_cfg(),
     }
 
     if args.batch_size != 24 and args.batch_size % 6 == 0:
