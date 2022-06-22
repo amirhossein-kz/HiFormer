@@ -1,5 +1,7 @@
+from genericpath import exists
 import ml_collections
 import os
+import wget
 
 ##### Swin_Res_34 #####
 # Total Params: 23251475 
@@ -14,6 +16,11 @@ def get_swin_res34_cv_11_11_612_true_cfg():
 
     # custom
     cfg.resnet_pretrained = True
+    os.makedirs('./weights', exist_ok=True)
+
+    if not os.path.isfile('./weights/swin_tiny_patch4_window7_224.pth'):
+        print('Downloading Swin-transformer model ...')
+        wget.download("https://github.com/SwinTransformer/storage/releases/download/v1.0.0/swin_tiny_patch4_window7_224.pth", "./weights/swin_tiny_patch4_window7_224.pth")    
     cfg.swin_pretrained_path = './weights/swin_tiny_patch4_window7_224.pth'
 
     # Cross Attention Config
@@ -42,6 +49,11 @@ def get_swin_res34_cv_120_221_612_true_cfg():
 
     # custom
     cfg.resnet_pretrained = True
+    os.makedirs('./weights', exist_ok=True)
+
+    if not os.path.isfile('./weights/swin_tiny_patch4_window7_224.pth'):
+        print('Downloading Swin-transformer model ...')
+        wget.download("https://github.com/SwinTransformer/storage/releases/download/v1.0.0/swin_tiny_patch4_window7_224.pth", "./weights/swin_tiny_patch4_window7_224.pth")    
     cfg.swin_pretrained_path = './weights/swin_tiny_patch4_window7_224.pth'
 
     # Cross Attention Config
@@ -69,6 +81,11 @@ def get_swin_res34_cv_120_111_612_true_cfg():
 
     # custom
     cfg.resnet_pretrained = True
+    os.makedirs('./weights', exist_ok=True)
+
+    if not os.path.isfile('./weights/swin_tiny_patch4_window7_224.pth'):
+        print('Downloading Swin-transformer model ...')
+        wget.download("https://github.com/SwinTransformer/storage/releases/download/v1.0.0/swin_tiny_patch4_window7_224.pth", "./weights/swin_tiny_patch4_window7_224.pth")    
     cfg.swin_pretrained_path = './weights/swin_tiny_patch4_window7_224.pth'
 
     # Cross Attention Config
@@ -97,6 +114,11 @@ def get_swin_res34_cv_120_221_66_true_cfg():
 
     # custom
     cfg.resnet_pretrained = True
+    os.makedirs('./weights', exist_ok=True)
+
+    if not os.path.isfile('./weights/swin_tiny_patch4_window7_224.pth'):
+        print('Downloading Swin-transformer model ...')
+        wget.download("https://github.com/SwinTransformer/storage/releases/download/v1.0.0/swin_tiny_patch4_window7_224.pth", "./weights/swin_tiny_patch4_window7_224.pth")    
     cfg.swin_pretrained_path = './weights/swin_tiny_patch4_window7_224.pth'
 
     # Cross Attention Config
@@ -125,6 +147,11 @@ def get_swin_res34_cv_11_11_44_true_cfg():
 
     # custom
     cfg.resnet_pretrained = True
+    os.makedirs('./weights', exist_ok=True)
+
+    if not os.path.isfile('./weights/swin_tiny_patch4_window7_224.pth'):
+        print('Downloading Swin-transformer model ...')
+        wget.download("https://github.com/SwinTransformer/storage/releases/download/v1.0.0/swin_tiny_patch4_window7_224.pth", "./weights/swin_tiny_patch4_window7_224.pth")    
     cfg.swin_pretrained_path = './weights/swin_tiny_patch4_window7_224.pth'
 
     # Cross Attention Config
@@ -153,6 +180,11 @@ def get_swin_res34_cv_11_11_33_true_cfg():
 
     # custom
     cfg.resnet_pretrained = True
+    os.makedirs('./weights', exist_ok=True)
+
+    if not os.path.isfile('./weights/swin_tiny_patch4_window7_224.pth'):
+        print('Downloading Swin-transformer model ...')
+        wget.download("https://github.com/SwinTransformer/storage/releases/download/v1.0.0/swin_tiny_patch4_window7_224.pth", "./weights/swin_tiny_patch4_window7_224.pth")    
     cfg.swin_pretrained_path = './weights/swin_tiny_patch4_window7_224.pth'
 
     # Cross Attention Config
@@ -181,6 +213,11 @@ def get_swin_res34_cv_110_111_612_true_cfg():
 
     # custom
     cfg.resnet_pretrained = True
+    os.makedirs('./weights', exist_ok=True)
+
+    if not os.path.isfile('./weights/swin_tiny_patch4_window7_224.pth'):
+        print('Downloading Swin-transformer model ...')
+        wget.download("https://github.com/SwinTransformer/storage/releases/download/v1.0.0/swin_tiny_patch4_window7_224.pth", "./weights/swin_tiny_patch4_window7_224.pth")    
     cfg.swin_pretrained_path = './weights/swin_tiny_patch4_window7_224.pth'
 
     # Cross Attention Config
@@ -209,6 +246,11 @@ def get_swin_res34_cv_130_331_66_true_cfg():
 
     # custom
     cfg.resnet_pretrained = True
+    os.makedirs('./weights', exist_ok=True)
+
+    if not os.path.isfile('./weights/swin_tiny_patch4_window7_224.pth'):
+        print('Downloading Swin-transformer model ...')
+        wget.download("https://github.com/SwinTransformer/storage/releases/download/v1.0.0/swin_tiny_patch4_window7_224.pth", "./weights/swin_tiny_patch4_window7_224.pth")    
     cfg.swin_pretrained_path = './weights/swin_tiny_patch4_window7_224.pth'
 
     # Cross Attention Config
@@ -237,6 +279,11 @@ def get_swin_res34_cv_110_221_612_true_cfg():
 
     # custom
     cfg.resnet_pretrained = True
+    os.makedirs('./weights', exist_ok=True)
+
+    if not os.path.isfile('./weights/swin_tiny_patch4_window7_224.pth'):
+        print('Downloading Swin-transformer model ...')
+        wget.download("https://github.com/SwinTransformer/storage/releases/download/v1.0.0/swin_tiny_patch4_window7_224.pth", "./weights/swin_tiny_patch4_window7_224.pth")    
     cfg.swin_pretrained_path = './weights/swin_tiny_patch4_window7_224.pth'
 
     # Cross Attention Config
@@ -265,6 +312,11 @@ def get_swin_res34_cv_140_441_66_true_cfg():
 
     # custom
     cfg.resnet_pretrained = True
+    os.makedirs('./weights', exist_ok=True)
+
+    if not os.path.isfile('./weights/swin_tiny_patch4_window7_224.pth'):
+        print('Downloading Swin-transformer model ...')
+        wget.download("https://github.com/SwinTransformer/storage/releases/download/v1.0.0/swin_tiny_patch4_window7_224.pth", "./weights/swin_tiny_patch4_window7_224.pth")    
     cfg.swin_pretrained_path = './weights/swin_tiny_patch4_window7_224.pth'
 
     # Cross Attention Config
@@ -293,7 +345,12 @@ def get_swin_res50_cv_110_111_612_true_cfg():
     cfg.num_classes = 9
 
     # custom
-    cfg.resnet_pretrained = True  
+    cfg.resnet_pretrained = True
+    os.makedirs('./weights', exist_ok=True)
+    
+    if not os.path.isfile('./weights/swin_tiny_patch4_window7_224.pth'):
+        print('Downloading Swin-transformer model ...')
+        wget.download("https://github.com/SwinTransformer/storage/releases/download/v1.0.0/swin_tiny_patch4_window7_224.pth", "./weights/swin_tiny_patch4_window7_224.pth")    
     cfg.swin_pretrained_path = './weights/swin_tiny_patch4_window7_224.pth'
     
     # Cross Attention Config
@@ -322,6 +379,11 @@ def get_swin_res50_cv_120_221_612_true_cfg():
 
     # custom
     cfg.resnet_pretrained = True
+    os.makedirs('./weights', exist_ok=True)
+    
+    if not os.path.isfile('./weights/swin_tiny_patch4_window7_224.pth'):
+        print('Downloading Swin-transformer model ...')
+        wget.download("https://github.com/SwinTransformer/storage/releases/download/v1.0.0/swin_tiny_patch4_window7_224.pth", "./weights/swin_tiny_patch4_window7_224.pth")    
     cfg.swin_pretrained_path = './weights/swin_tiny_patch4_window7_224.pth'
     
     # Cross Attention Config
@@ -349,8 +411,13 @@ def get_swin_res50_cv_120_221_66_true_cfg():
 
     # custom
     cfg.resnet_pretrained = True
+    os.makedirs('./weights', exist_ok=True)
+    
+    if not os.path.isfile('./weights/swin_tiny_patch4_window7_224.pth'):
+        print('Downloading Swin-transformer model ...')
+        wget.download("https://github.com/SwinTransformer/storage/releases/download/v1.0.0/swin_tiny_patch4_window7_224.pth", "./weights/swin_tiny_patch4_window7_224.pth")    
     cfg.swin_pretrained_path = './weights/swin_tiny_patch4_window7_224.pth'
-
+    
     # Cross Attention Config
     cfg.depth = [[1, 2, 0]]
     cfg.num_heads = (6, 6)
@@ -377,6 +444,11 @@ def get_swin_res50_cv_130_331_66_true_cfg():
 
     # custom
     cfg.resnet_pretrained = True
+    os.makedirs('./weights', exist_ok=True)
+    
+    if not os.path.isfile('./weights/swin_tiny_patch4_window7_224.pth'):
+        print('Downloading Swin-transformer model ...')
+        wget.download("https://github.com/SwinTransformer/storage/releases/download/v1.0.0/swin_tiny_patch4_window7_224.pth", "./weights/swin_tiny_patch4_window7_224.pth")    
     cfg.swin_pretrained_path = './weights/swin_tiny_patch4_window7_224.pth'
     
     # Cross Attention Config
@@ -405,6 +477,11 @@ def get_swin_res50_cv_120_111_612_true_cfg():
 
     # custom
     cfg.resnet_pretrained = True
+    os.makedirs('./weights', exist_ok=True)
+    
+    if not os.path.isfile('./weights/swin_tiny_patch4_window7_224.pth'):
+        print('Downloading Swin-transformer model ...')
+        wget.download("https://github.com/SwinTransformer/storage/releases/download/v1.0.0/swin_tiny_patch4_window7_224.pth", "./weights/swin_tiny_patch4_window7_224.pth")    
     cfg.swin_pretrained_path = './weights/swin_tiny_patch4_window7_224.pth'
     
     # Cross Attention Config
@@ -432,6 +509,11 @@ def get_swin_res50_cv_120_111_66_true_cfg():
 
     # custom
     cfg.resnet_pretrained = True
+    os.makedirs('./weights', exist_ok=True)
+    
+    if not os.path.isfile('./weights/swin_tiny_patch4_window7_224.pth'):
+        print('Downloading Swin-transformer model ...')
+        wget.download("https://github.com/SwinTransformer/storage/releases/download/v1.0.0/swin_tiny_patch4_window7_224.pth", "./weights/swin_tiny_patch4_window7_224.pth")    
     cfg.swin_pretrained_path = './weights/swin_tiny_patch4_window7_224.pth'
     
     # Cross Attention Config
@@ -460,6 +542,11 @@ def get_swin_res50_cv_11_11_612_true_cfg():
 
     # custom
     cfg.resnet_pretrained = True
+    os.makedirs('./weights', exist_ok=True)
+    
+    if not os.path.isfile('./weights/swin_tiny_patch4_window7_224.pth'):
+        print('Downloading Swin-transformer model ...')
+        wget.download("https://github.com/SwinTransformer/storage/releases/download/v1.0.0/swin_tiny_patch4_window7_224.pth", "./weights/swin_tiny_patch4_window7_224.pth")    
     cfg.swin_pretrained_path = './weights/swin_tiny_patch4_window7_224.pth'
     
     # Cross Attention Config
@@ -488,6 +575,11 @@ def get_swin_res18_cv_11_11_612_true_cfg():
 
     # custom
     cfg.resnet_pretrained = True
+    os.makedirs('./weights', exist_ok=True)
+    
+    if not os.path.isfile('./weights/swin_tiny_patch4_window7_224.pth'):
+        print('Downloading Swin-transformer model ...')    
+        wget.download("https://github.com/SwinTransformer/storage/releases/download/v1.0.0/swin_tiny_patch4_window7_224.pth", "./weights/swin_tiny_patch4_window7_224.pth")    
     cfg.swin_pretrained_path = './weights/swin_tiny_patch4_window7_224.pth'
 
     # Cross Attention Config
