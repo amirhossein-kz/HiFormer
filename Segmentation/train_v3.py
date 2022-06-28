@@ -94,6 +94,9 @@ if __name__ == "__main__":
         'swin_res50_cv_120_111_66_true_cfg' : configs.get_swin_res50_cv_120_111_66_true_cfg(),
         'swin_res50_cv_11_11_612_true_cfg'  : configs.get_swin_res50_cv_11_11_612_true_cfg(),
         'swin_res18_cv_11_11_612_true_cfg'  : configs.get_swin_res18_cv_11_11_612_true_cfg(),
+        'swin_res34_cv_110_111_33_true_cfg' : configs.get_swin_res34_cv_110_111_33_true_cfg(),
+        'swin_res50_cv_110_111_33_true_cfg' : configs.get_swin_res50_cv_110_111_33_true_cfg(),
+        'swin_res50_cv_11_11_33_true_cfg'   : configs.get_swin_res50_cv_11_11_33_true_cfg(),
     }
 
     if args.batch_size != 24 and args.batch_size % 6 == 0:
