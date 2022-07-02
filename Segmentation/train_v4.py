@@ -4,10 +4,10 @@ import random
 import numpy as np
 import torch
 import torch.backends.cudnn as cudnn
-from models.SwinRetina_App4 import SwinRetina_V4
+from models.SwinRetina_App5 import SwinRetina_V5
 
 from trainer import trainer_synapse
-import models.SwinRetina_configs as configs 
+import models.SwinRetina_configs3 as configs 
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--root_path', type=str,
@@ -75,9 +75,15 @@ if __name__ == "__main__":
     }
 
     CONFIGS = {
-        'Swin_Res34': configs.get_swin_res34_cfg(),
-        'Swin_Res50': configs.get_swin_res50_cfg(),
-        'Swin_Res18': configs.get_swin_res18_cfg(),
+        'swin_dense121_cv_120_221_66_true_cfg': configs.get_swin_dense121_cv_120_221_66_true_cfg(),
+        'swin_dense169_cv_120_221_66_true_cfg': configs.get_swin_dense169_cv_120_221_66_true_cfg(),
+        'swin_dense201_cv_120_221_66_true_cfg': configs.get_swin_dense201_cv_120_221_66_true_cfg(),
+        'swin_dense121_cv_130_331_66_true_cfg': configs.get_swin_dense121_cv_130_331_66_true_cfg(),
+        'swin_dense169_cv_130_331_66_true_cfg': configs.get_swin_dense169_cv_130_331_66_true_cfg(),
+        'swin_dense201_cv_130_331_66_true_cfg': configs.get_swin_dense201_cv_130_331_66_true_cfg(),
+        'swin_dense121_cv_110_111_33_true_cfg': configs.get_swin_dense121_cv_110_111_33_true_cfg(),
+        'swin_dense169_cv_110_111_33_true_cfg': configs.get_swin_dense169_cv_110_111_33_true_cfg(),
+        'swin_dense201_cv_110_111_33_true_cfg': configs.get_swin_dense201_cv_110_111_33_true_cfg(),
     }
 
     if args.batch_size != 24 and args.batch_size % 6 == 0:
@@ -87,7 +93,7 @@ if __name__ == "__main__":
     args.root_path = dataset_config[dataset_name]['root_path']
     args.list_dir = dataset_config[dataset_name]['list_dir']
 
-    net = SwinRetina_V4(config=CONFIGS[args.model_name], img_size=args.img_size, n_classes=args.num_classes).cuda()
+    net = SwinRetina_V5(config=CONFIGS[args.model_name], img_size=args.img_size, n_classes=args.num_classes).cuda()
    
     trainer = {'Synapse': trainer_synapse,}
     trainer[dataset_name](args, net, args.output_dir)
