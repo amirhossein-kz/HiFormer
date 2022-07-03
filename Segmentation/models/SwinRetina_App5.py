@@ -194,7 +194,8 @@ class PyramidFeatures(nn.Module):
         sw3_CLS = self.avgpool_2(norm2.transpose(1, 2))
         sw3_CLS_reshaped = Rearrange('b c 1 -> b 1 c')(sw3_CLS) 
 
-        return [torch.cat((sw1_CLS_reshaped, sw1_skipped), dim=1), torch.cat((sw3_CLS_reshaped, fm3_sw3_skipped), dim=1)], [fm2_sw2_skipped, sw1_skipped]
+        return [torch.cat((sw1_CLS_reshaped, sw1_skipped), dim=1), torch.cat((sw3_CLS_reshaped, fm3_sw3_skipped), dim=1)]
+
 
 class All2Cross(nn.Module):
     def __init__(self, config, img_size = 224 , in_chans=3, embed_dim=(96, 384), norm_layer=nn.LayerNorm):
@@ -247,7 +248,7 @@ class All2Cross(nn.Module):
         return out
 
     def forward(self, x):
-        xs, swin_layers = self.pyramid(x)
+        xs = self.pyramid(x)
 
         if self.cross_pos_embed:
           for i in range(self.num_branches):
@@ -258,57 +259,39 @@ class All2Cross(nn.Module):
         xs = [self.norm[i](x) for i, x in enumerate(xs)]
         # out = [x[:, 0] for x in xs] # Class token
 
-        return xs, swin_layers
+        return xs
 
 
-class ConvUp(nn.Module):
-    def __init__(self, in_chans, out_chans, kernel_size=3, scale_factor=2):
+class ConvUpsample(nn.Module):
+    def __init__(self, in_chans=384, out_chans=[128], upsample=True):
         super().__init__()
-        self.conv_up = nn.Sequential(
-            nn.Conv2d(
-                in_chans, out_chans,
+        self.in_chans = in_chans
+        self.out_chans = out_chans
+        
+        self.conv_tower = nn.ModuleList()
+        for i, out_ch in enumerate(self.out_chans):
+            if i>0: self.in_chans = out_ch
+            self.conv_tower.append(nn.Conv2d(
+                self.in_chans, out_ch,
                 kernel_size=3, stride=1,
-                padding= kernel_size // 2, bias=True),
-            nn.GELU(),
-            nn.Upsample(scale_factor=2, mode='bilinear', align_corners=False)
-        )
+                padding=1, bias=False
+            ))
+            self.conv_tower.append(nn.GroupNorm(32, out_ch))
+            self.conv_tower.append(nn.ReLU(inplace=False))
+            if upsample:
+                self.conv_tower.append(nn.Upsample(
+                        scale_factor=2, mode='bilinear', align_corners=False))
+            
+        self.convs_level = nn.Sequential(*self.conv_tower)
+        
     def forward(self, x):
-        return self.conv_up(x)
+        return self.convs_level(x)
 
-    
-class ConvBlk(nn.Module):
-    def __init__(self, in_chans, out_chans, kernel_size=3):
-        super().__init__()
-        self.conv_blk = nn.Sequential(
-            nn.Conv2d(
-                in_chans, out_chans,
-                kernel_size=3, stride=1,
-                padding= kernel_size // 2, bias=True),
-            nn.GELU(),
-        )
-    def forward(self, x):
-        return self.conv_blk(x)
-    
-    
+
 class SegmentationHead(nn.Sequential):
     def __init__(self, in_channels, out_channels, kernel_size=3):
         conv2d = nn.Conv2d(in_channels, out_channels, kernel_size=kernel_size, padding=kernel_size // 2)
         super().__init__(conv2d)
-
-        
-class ConvPred(nn.Module):
-    def __init__(self, in_channels, out_channels, kernel_size=3, scale_factor=4):
-        super().__init__()
-        self.conv_pred = nn.Sequential(
-            nn.Conv2d(
-                in_channels, out_channels,
-                kernel_size=1, stride=1,
-                padding=0, bias=True),
-            nn.GELU(),
-            nn.Upsample(scale_factor=scale_factor, mode='bilinear', align_corners=False)
-        )
-    def forward(self, x):
-        return self.conv_pred(x)    
 
 
 class SwinRetina_V5(nn.Module):
@@ -319,64 +302,40 @@ class SwinRetina_V5(nn.Module):
         self.n_classes = n_classes
         self.All2Cross = All2Cross(config = config, img_size= img_size, in_chans=in_chans)
         
+        self.ConvUp_s = ConvUpsample(in_chans=384, out_chans=[128,128], upsample=True)
+        self.ConvUp_l = ConvUpsample(in_chans=96, upsample=False)
+    
         self.segmentation_head = SegmentationHead(
             in_channels=16,
             out_channels=n_classes,
             kernel_size=3,
         )    
-        
-        # Conv-Up (Po)
-        self.conv_up_p0 = ConvUp(in_chans=384, out_chans=192, kernel_size=3, scale_factor=2)
-        
-        # Conv(P1)
-        self.conv_blk_p1 = ConvBlk(in_chans=192, out_chans=192, kernel_size=3)
 
-        # Conv[P0, P1]
-        self.conv_blk_p1 = ConvBlk(in_chans=192, out_chans=192, kernel_size=3)
-        self.conv_blk_p0_p1 = ConvBlk(in_chans=384, out_chans=192, kernel_size=3)
-        self.conv_up_p0_p1 = ConvUp(in_chans=192, out_chans=96, kernel_size=3, scale_factor=2)
-        
-        # P2
-        self.conv_blk_p2 = ConvBlk(in_chans=96, out_chans=96, kernel_size=3)
-        self.conv_blk_p1_p2 = ConvBlk(in_chans=192, out_chans=96, kernel_size=3)
-        
-        # Embed 1
-        self.conv_embed_1 = ConvBlk(in_chans=96, out_chans=96, kernel_size=3)
-
-        # Final 
-        self.conv_pred = ConvPred(in_channels=96, out_channels=16, kernel_size=3, scale_factor=4)
-        
+        self.conv_pred = nn.Sequential(
+            nn.Conv2d(
+                128, 16,
+                kernel_size=1, stride=1,
+                padding=0, bias=True),
+            # nn.GroupNorm(8, 16), 
+            nn.ReLU(inplace=True),
+            nn.Upsample(scale_factor=4, mode='bilinear', align_corners=False)
+        )
+    
     def forward(self, x):
-        xs, swin_layers = self.All2Cross(x)
+        xs = self.All2Cross(x)
         embeddings = [x[:, 1:] for x in xs]
-        
-        embed_0 = Rearrange('b (h w) d -> b d h w', h=(self.img_size//self.patch_size[1]), w=(self.img_size//self.patch_size[1]))(embeddings[1])
+        reshaped_embed = []
+        for i, embed in enumerate(embeddings):
 
-        # Conv-Up (Po)
-        p0 = self.conv_up_p0(embed_0)
-        
-        # Conv(P1)
-        swin_1 = Rearrange('b (h w) d -> b d h w', h=28, w=28)(swin_layers[0])
-        p1 = self.conv_blk_p1(swin_1)
-        
-        # [P0, P1]
-        p0_p1 = torch.cat((p1, p0), dim=1)
-        conv_p0_p1 = self.conv_blk_p0_p1(p0_p1)
-        conv_up_p0_p1 = self.conv_up_p0_p1(conv_p0_p1)
-        
-        # Conv(P2)
-        swin_2 = Rearrange('b (h w) d -> b d h w', h=56, w=56)(swin_layers[1])
-        p2 = self.conv_blk_p2(swin_2)
-        p1_2 = torch.cat((p2, conv_up_p0_p1), dim=1)
-        conv_p1_p2 = self.conv_blk_p1_p2(p1_2)
-        
-        # Embed 2
-        embed_1 = Rearrange('b (h w) d -> b d h w', h=(self.img_size//self.patch_size[0]), w=(self.img_size//self.patch_size[0]))(embeddings[0])
-        conv_embed_1 = self.conv_embed_1(embed_1)
-        
-        # merge
-        C = conv_embed_1 + conv_p1_p2
+            embed = Rearrange('b (h w) d -> b d h w', h=(self.img_size//self.patch_size[i]), w=(self.img_size//self.patch_size[i]))(embed)
+            embed = self.ConvUp_l(embed) if i == 0 else self.ConvUp_s(embed)
+            
+            reshaped_embed.append(embed)
+
+        C = reshaped_embed[0] + reshaped_embed[1]
         C = self.conv_pred(C)
+
         out = self.segmentation_head(C)
         
         return out  
+
