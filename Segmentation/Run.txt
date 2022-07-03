@@ -1,2 +1,2 @@
---model_name swin_res34_cv_11_11_612_true_cfg 
---model_name swin_res34_cv_120_221_612_true_cfg
+--model_name swin_res18_cv_120_221_66_true_cfg 
+--model_name swin_res101_cv_120_221_66_true_cfg
