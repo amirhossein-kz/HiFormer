@@ -1,6 +1,11 @@
 # SwinRetina paper
-All configurations are available in the Run.txt file.
+Test code:
 
+```
+python3 test.py --model_name [Model Name] --epoch_num [Epoch Num] --is_saveni
+```
+
+All configurations are available in the Run.txt file.
 Batch Size 10 works in Kaggle and Colab.
 
 Config 1:
