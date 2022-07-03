@@ -2,7 +2,7 @@
 Test code:
 
 ```
-python3 test.py --model_name [Model Name] --epoch_num [Epoch Num] --is_saveni
+python3 test.py --model_name [Model Name] --epoch_num [Epoch Num] --is_saveni [whether to save results during inference]
 ```
 
 All configurations are available in the Run.txt file.
