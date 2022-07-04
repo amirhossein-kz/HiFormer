@@ -640,3 +640,132 @@ def get_swin_res101_cv_120_221_66_true_cfg():
 
     return cfg
 # ----------------------------------------------------------------------------------#
+def get_swin_res50_cv_120_221_33_true_cfg():
+    cfg = ml_collections.ConfigDict()
+    cfg.cnn_backbone = "resnet50"
+    cfg.cnn_pyramid_fm  = [256,512,1024]
+    cfg.swin_pyramid_fm = [96, 192, 384]
+    cfg.image_size = 224
+    cfg.patch_size = 4
+    cfg.num_classes = 9
+
+    # custom
+    cfg.resnet_pretrained = True
+    cfg.swin_pretrained_path = './weights/swin_tiny_patch4_window7_224.pth'
+
+    # Cross Attention Config
+    cfg.depth = [[1, 2, 0]]
+    cfg.num_heads = (3, 3)
+    cfg.mlp_ratio=(2., 2., 1.)
+    cfg.drop_rate = 0.
+    cfg.attn_drop_rate = 0.
+    cfg.drop_path_rate = 0.
+    cfg.qkv_bias = True
+    cfg.qk_scale = None
+    cfg.cross_pos_embed = True
+
+    return cfg
+# ----------------------------------------------------------------------------------#
+def get_swin_res50_cv_120_111_66_true_cfg():
+    cfg = ml_collections.ConfigDict()
+    cfg.cnn_backbone = "resnet50"
+    cfg.cnn_pyramid_fm  = [256,512,1024]
+    cfg.swin_pyramid_fm = [96, 192, 384]
+    cfg.image_size = 224
+    cfg.patch_size = 4
+    cfg.num_classes = 9
+
+    # custom
+    cfg.resnet_pretrained = True
+    cfg.swin_pretrained_path = './weights/swin_tiny_patch4_window7_224.pth'
+
+    # Cross Attention Config
+    cfg.depth = [[1, 2, 0]]
+    cfg.num_heads = (6, 6)
+    cfg.mlp_ratio=(1., 1., 1.)
+    cfg.drop_rate = 0.
+    cfg.attn_drop_rate = 0.
+    cfg.drop_path_rate = 0.
+    cfg.qkv_bias = True
+    cfg.qk_scale = None
+    cfg.cross_pos_embed = True
+
+    return cfg
+# ----------------------------------------------------------------------------------#
+def get_swin_res50_cv_120_331_66_true_cfg():
+    cfg = ml_collections.ConfigDict()
+    cfg.cnn_backbone = "resnet50"
+    cfg.cnn_pyramid_fm  = [256,512,1024]
+    cfg.swin_pyramid_fm = [96, 192, 384]
+    cfg.image_size = 224
+    cfg.patch_size = 4
+    cfg.num_classes = 9
+
+    # custom
+    cfg.resnet_pretrained = True
+    cfg.swin_pretrained_path = './weights/swin_tiny_patch4_window7_224.pth'
+
+    # Cross Attention Config
+    cfg.depth = [[1, 2, 0]]
+    cfg.num_heads = (6, 6)
+    cfg.mlp_ratio=(3., 3., 1.)
+    cfg.drop_rate = 0.
+    cfg.attn_drop_rate = 0.
+    cfg.drop_path_rate = 0.
+    cfg.qkv_bias = True
+    cfg.qk_scale = None
+    cfg.cross_pos_embed = True
+
+    return cfg
+# ----------------------------------------------------------------------------------#
+def get_swin_res50_cv_110_221_66_true_cfg():
+    cfg = ml_collections.ConfigDict()
+    cfg.cnn_backbone = "resnet50"
+    cfg.cnn_pyramid_fm  = [256,512,1024]
+    cfg.swin_pyramid_fm = [96, 192, 384]
+    cfg.image_size = 224
+    cfg.patch_size = 4
+    cfg.num_classes = 9
+
+    # custom
+    cfg.resnet_pretrained = True
+    cfg.swin_pretrained_path = './weights/swin_tiny_patch4_window7_224.pth'
+
+    # Cross Attention Config
+    cfg.depth = [[1, 1, 0]]
+    cfg.num_heads = (6, 6)
+    cfg.mlp_ratio=(2., 2., 1.)
+    cfg.drop_rate = 0.
+    cfg.attn_drop_rate = 0.
+    cfg.drop_path_rate = 0.
+    cfg.qkv_bias = True
+    cfg.qk_scale = None
+    cfg.cross_pos_embed = True
+
+    return cfg
+# ----------------------------------------------------------------------------------#
+def get_swin_res50_cv_220_221_66_true_cfg():
+    cfg = ml_collections.ConfigDict()
+    cfg.cnn_backbone = "resnet50"
+    cfg.cnn_pyramid_fm  = [256,512,1024]
+    cfg.swin_pyramid_fm = [96, 192, 384]
+    cfg.image_size = 224
+    cfg.patch_size = 4
+    cfg.num_classes = 9
+
+    # custom
+    cfg.resnet_pretrained = True
+    cfg.swin_pretrained_path = './weights/swin_tiny_patch4_window7_224.pth'
+
+    # Cross Attention Config
+    cfg.depth = [[2, 2, 0]]
+    cfg.num_heads = (6, 6)
+    cfg.mlp_ratio=(2., 2., 1.)
+    cfg.drop_rate = 0.
+    cfg.attn_drop_rate = 0.
+    cfg.drop_path_rate = 0.
+    cfg.qkv_bias = True
+    cfg.qk_scale = None
+    cfg.cross_pos_embed = True
+
+    return cfg
