@@ -5,3 +5,4 @@ wget
 tensorboardX
 SimpleITK
 medpy
+torch>=1.11.0
