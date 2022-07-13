@@ -15,8 +15,6 @@ from models.HiFormer import HiFormer
 import configs.HiFormer_configs as configs 
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--root_path', type=str,
-                    default='./data/Synapse/train_npz', help='root dir for data')
 parser.add_argument('--test_path', type=str,
                     default='./data/Synapse/test_vol_h5', help='root dir for data')
 parser.add_argument('--dataset', type=str,
@@ -62,7 +60,7 @@ def inference(args, testloader, model, test_save_path=None):
         metric_i = test_single_volume(image, label, model, classes=args.num_classes, patch_size=[args.img_size, args.img_size],
                                       test_save_path=test_save_path, case=case_name, z_spacing=args.z_spacing)
         metric_list += np.array(metric_i)
-        logging.info('idx %d case %s mean_dice %f mean_hd95 %f' % (i_batch, case_name, np.mean(metric_i, axis=0)[0], np.mean(metric_i, axis=0)[1]))
+        logging.info(' idx %d case %s mean_dice %f mean_hd95 %f' % (i_batch, case_name, np.mean(metric_i, axis=0)[0], np.mean(metric_i, axis=0)[1]))
     
     metric_list = metric_list / len(db_test)
 
@@ -92,8 +90,8 @@ if __name__ == "__main__":
 
 
     CONFIGS = {
-        'hiformer-b': configs.get_hiformer_s_configs(),
-        'hiformer-s': configs.get_hiformer_b_configs(),
+        'hiformer-s': configs.get_hiformer_s_configs(),
+        'hiformer-b': configs.get_hiformer_b_configs(),
         'hiformer-l': configs.get_hiformer_l_configs(),
     }
 
@@ -106,7 +104,7 @@ if __name__ == "__main__":
 
     log_folder = './test_log/test_log_'
     os.makedirs(log_folder, exist_ok=True)
-    
+
     logging.basicConfig(filename=log_folder + '/' + args.model_name + ".txt", level=logging.INFO, format='[%(asctime)s.%(msecs)03d] %(message)s', datefmt='%H:%M:%S')
     logging.getLogger().addHandler(logging.StreamHandler(sys.stdout))
     logging.info(str(args))
