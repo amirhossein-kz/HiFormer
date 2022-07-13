@@ -99,7 +99,6 @@ if __name__ == "__main__":
         'swin_res50_cv_11_11_33_true_cfg'   : configs.get_swin_res50_cv_11_11_33_true_cfg(),
         'swin_res18_cv_120_221_66_true_cfg' : configs.get_swin_res18_cv_120_221_66_true_cfg(),
         'swin_res101_cv_120_221_66_true_cfg': configs.get_swin_res101_cv_120_221_66_true_cfg(),
-
         'swin_res50_cv_120_221_33_true_cfg' : configs.get_swin_res50_cv_120_221_33_true_cfg(),
         'swin_res50_cv_120_331_66_true_cfg' : configs.get_swin_res50_cv_120_331_66_true_cfg(),
         'swin_res50_cv_110_221_66_true_cfg' : configs.get_swin_res50_cv_110_221_66_true_cfg(),
