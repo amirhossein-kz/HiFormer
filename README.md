@@ -1,10 +1,10 @@
-# [Contextual Attention Network: Transformer Meets U-Net](https://arxiv.org/abs/2203.01932)
+# [HiFormer: Hierarchical Multi-scale Representations Using Transformers for Medical Image Segmentation](https://arxiv.org/abs/2203.01932)
 
-Contexual attention network for medical image segmentation with state of the art results on skin lesion segmentation, multiple myeloma cell segmentation. This method incorpotrates the transformer module into a U-Net structure so as to concomitantly capture long-range dependency along with resplendent local informations.
+Hierarchical Multi-scale Representations for medical image segmentation with state of the art results on synapse multi-organ segmentation, skin lesion segmentation, multiple myeloma cell segmentation. This method designs a two multi-scale feature representations using the seminal Swin Transformer module and a CNN-based, then using a Double-Level Fusion (DLF) module, it allows a fine fusion of global and local features.
 If this code helps with your research please consider citing the following paper:
 </br>
 > [R. Azad](https://scholar.google.com/citations?hl=en&user=Qb5ildMAAAAJ&view_op=list_works&sortby=pubdate), [Moein Heidari](https://scholar.google.com/citations?user=mir8D5UAAAAJ&hl=en&oi=sra), [Yuli Wu](https://scholar.google.com/citations?user=qlun0AgAAAAJ) and [Dorit Merhof
-](https://scholar.google.com/citations?user=JH5HObAAAAAJ&sortby=pubdate), "Contextual Attention Network: Transformer Meets U-Net", download [link](https://arxiv.org/abs/2203.01932).
+](https://scholar.google.com/citations?user=JH5HObAAAAAJ&sortby=pubdate), "HiFormer: Hierarchical Multi-scale Representations Using Transformers for Medical Image Segmentation", download [link](https://arxiv.org/abs/2203.01932).
 
 ```python
 @article{reza2022contextual,
