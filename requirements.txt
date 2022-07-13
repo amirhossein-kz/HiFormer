@@ -1,8 +1,6 @@
 timm
 einops
 ml_collections
-fvcore
-submitit
 wget
 tensorboardX
 SimpleITK

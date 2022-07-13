@@ -19,6 +19,8 @@ def get_n_params(model):
         pp += nn
     return pp
 
+
+############ Swin Transformer ############
 class Mlp(nn.Module):
     def __init__(self, in_features, hidden_features=None, out_features=None, act_layer=nn.GELU, drop=0.):
         super().__init__()
@@ -37,6 +39,7 @@ class Mlp(nn.Module):
         x = self.drop(x)
         return x
 
+
 def window_partition(x, window_size):
     """
     Args:
@@ -49,6 +52,7 @@ def window_partition(x, window_size):
     x = x.view(B, H // window_size, window_size, W // window_size, window_size, C)
     windows = x.permute(0, 1, 3, 2, 4, 5).contiguous().view(-1, window_size, window_size, C)
     return windows
+
 
 def window_reverse(windows, window_size, H, W):
     """
@@ -64,6 +68,7 @@ def window_reverse(windows, window_size, H, W):
     x = windows.view(B, H // window_size, W // window_size, window_size, window_size, -1)
     x = x.permute(0, 1, 3, 2, 4, 5).contiguous().view(B, H, W, -1)
     return x
+
 
 class WindowAttention(nn.Module): # W-MSA in the paper
     r""" Window based multi-head self attention (W-MSA) module with relative position bias.
@@ -160,6 +165,7 @@ class WindowAttention(nn.Module): # W-MSA in the paper
         # x = self.proj(x)
         flops += N * self.dim * self.dim
         return flops
+
 
 class SwinTransformerBlock(nn.Module):
     r""" Swin Transformer Block.
@@ -335,6 +341,7 @@ class PatchMerging(nn.Module):
         flops += (H // 2) * (W // 2) * 4 * self.dim * 2 * self.dim
         return flops
 
+
 class BasicLayer(nn.Module):
     """ A basic Swin Transformer layer for one stage.
     Args:
@@ -406,59 +413,12 @@ class BasicLayer(nn.Module):
         return flops
 
 
-class PatchEmbed(nn.Module):
-    r""" Image to Patch Embedding
-    Args:
-        img_size (int): Image size.  Default: 224.
-        patch_size (int): Patch token size. Default: 4.
-        in_chans (int): Number of input image channels. Default: 3.
-        embed_dim (int): Number of linear projection output channels. Default: 96.
-        norm_layer (nn.Module, optional): Normalization layer. Default: None
-    """
-
-    def __init__(self, img_size=224, patch_size=4, in_chans=3, embed_dim=96, norm_layer=None):
-        super().__init__()
-        img_size = to_2tuple(img_size)
-        patch_size = to_2tuple(patch_size)
-        patches_resolution = [img_size[0] // patch_size[0], img_size[1] // patch_size[1]]
-        self.img_size = img_size
-        self.patch_size = patch_size
-        self.patches_resolution = patches_resolution
-        self.num_patches = patches_resolution[0] * patches_resolution[1]
-
-        self.in_chans = in_chans
-        self.embed_dim = embed_dim
-
-        self.proj = nn.Conv2d(in_chans, embed_dim, kernel_size=patch_size, stride=patch_size)
-        if norm_layer is not None:
-            self.norm = norm_layer(embed_dim)
-        else:
-            self.norm = None
-
-    def forward(self, x):
-        B, C, H, W = x.shape
-        # FIXME look at relaxing size constraints
-        assert H == self.img_size[0] and W == self.img_size[1], \
-            f"Input image size ({H}*{W}) doesn't match model ({self.img_size[0]}*{self.img_size[1]})."
-        x = self.proj(x).flatten(2).transpose(1, 2)  # B Ph*Pw C
-        if self.norm is not None:
-            x = self.norm(x)
-        return x
-
-    def flops(self):
-        Ho, Wo = self.patches_resolution
-        flops = Ho * Wo * self.embed_dim * self.in_chans * (self.patch_size[0] * self.patch_size[1])
-        if self.norm is not None:
-            flops += Ho * Wo * self.embed_dim
-        return flops
-
-
+############ DLF ############
 class CrossAttention(nn.Module):
     def __init__(self, dim, num_heads=8, qkv_bias=False, qk_scale=None, attn_drop=0., proj_drop=0.):
         super().__init__()
         self.num_heads = num_heads
         head_dim = dim // num_heads
-        # NOTE scale factor was wrong in my original version, can set manually to be compat with prev weights
         self.scale = qk_scale or head_dim ** -0.5
 
         self.wq = nn.Linear(dim, dim, bias=qkv_bias)
@@ -493,7 +453,7 @@ class CrossAttentionBlock(nn.Module):
         self.norm1 = norm_layer(dim)
         self.attn = CrossAttention(
             dim, num_heads=num_heads, qkv_bias=qkv_bias, qk_scale=qk_scale, attn_drop=attn_drop, proj_drop=drop)
-        # NOTE: drop path for stochastic depth, we shall see if this is better than dropout here
+
         self.drop_path = DropPath(drop_path) if drop_path > 0. else nn.Identity()
         self.has_mlp = has_mlp
         if has_mlp:
@@ -509,13 +469,7 @@ class CrossAttentionBlock(nn.Module):
         return x
 
 
-
-def _compute_num_patches(img_size, patches):
-    return [i // p * i // p for i, p in zip(img_size,patches)]
-
-
-
-class MultiScaleBlock(nn.Module):
+class DLFBlock(nn.Module):
 
     def __init__(self, dim, patches, depth, num_heads, mlp_ratio, qkv_bias=False, qk_scale=None, drop=0., attn_drop=0.,
                  drop_path=0., act_layer=nn.GELU, norm_layer=nn.LayerNorm):
@@ -523,7 +477,7 @@ class MultiScaleBlock(nn.Module):
 
         num_branches = len(dim)
         self.num_branches = num_branches
-        # different branch could have different embedding size, the first one is the base
+
         self.blocks = nn.ModuleList()
         for d in range(num_branches):
             tmp = []
@@ -571,8 +525,10 @@ class MultiScaleBlock(nn.Module):
 
     def forward(self, x):
         outs_b = [block(x_) for x_, block in zip(x, self.blocks)]
+        
         # only take the cls token out
         proj_cls_token = [proj(x[:, 0:1]) for x, proj in zip(outs_b, self.projs)]
+
         # cross attention
         outs = []
         for i in range(self.num_branches):
@@ -584,7 +540,7 @@ class MultiScaleBlock(nn.Module):
         return outs
 
 
-# Trainer
+############ Test ############
 import numpy as np
 import torch
 from medpy import metric
@@ -656,8 +612,8 @@ def test_single_volume(image, label, net, classes, patch_size=[256, 256], test_s
                 slice = zoom(slice, (patch_size[0] / x, patch_size[1] / y), order=3)  # previous using 0
             input = torch.from_numpy(slice).unsqueeze(0).unsqueeze(0).float().cuda()
 
-            B, C, W, H = input.shape
-            input = input.expand(B, 3, W, H)
+            B, C, H, W = input.shape
+            input = input.expand(B, 3, H, W)
 
             net.eval()
             with torch.no_grad():
