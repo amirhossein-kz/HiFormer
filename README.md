@@ -49,9 +49,9 @@ You can download the learned weights for sypanse dataset in the following table.
 
 Dataset |Learned weights
 ------------ | -------------
-[Synapse Multi-Organ Segmentation]() |[HiFormer-S]()
-[Synapse Multi-Organ Segmentation]() |[HiFormer-B]()
-[Synapse Multi-Organ Segmentation]() | [HiFormer-L]()
+[Synapse Multi-Organ Segmentation]() |[HiFormer-S](https://drive.google.com/file/d/1yyRyStyOkfQEKRiz64D6VaPiNPmzDkFJ/view?usp=sharing)
+[Synapse Multi-Organ Segmentation]() |[HiFormer-B](https://drive.google.com/file/d/1-EV0szMsK4flOIu4BOc20mZEW7Nos4cU/view?usp=sharing)
+[Synapse Multi-Organ Segmentation]() | [HiFormer-L](https://drive.google.com/file/d/12ADXxcy__9fB1nHo-6cSwLIWj8rJgN2o/view?usp=sharing)
 
 
 
