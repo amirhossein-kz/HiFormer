@@ -20,6 +20,8 @@ This code has been implemented in python language using Pytorch library and test
 ## Prepare data, Train/Test
 Please go to ["Instructions.ipynb"](https://github.com/amirhossein-kz/HiFormer/blob/main/Instructions.ipynb) for complete detail on dataset preparation and Train/Test procedure. 
 
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/amirhossein-kz//HiFormer/blob/main/Instructions.ipynb)
+
 ## Quick Overview
 ![Diagram of the proposed method](https://github.com/amirhossein-kz/HiFormer/blob/main/Figures/Model%20Overview.png)
 
@@ -29,7 +31,7 @@ For evaluating the performance of the proposed method, three challenging tasks i
 
 #### Performance Comparision on Synapse Multi-Organ Segmentation
 
-| <h3 align="left">**Methods** </h3> | DSC <p>&#8593;</p> | HD <p> &#8595;</p>  | Aorta | Gallbladder | Kidney(L) | Kidney(R) | Liver | Pancreas | Spleen | Stomach |
+| <h3 align="left">**Methods** </h3> | <p>DSC &#8593;</p> | <p>HD &#8595;</p>  | Aorta | Gallbladder | Kidney(L) | Kidney(R) | Liver | Pancreas | Spleen | Stomach |
 | --- |:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
 | **DARR** |  69.77 |  -  |  74.74 |  53.77 |  72.31 | 73.24  |  94.08  |  54.18 | 89.90 |  45.96 |
 | **R50 U-Net** |  74.68  |  36.87  |  87.74 |  63.66 |  80.60 |  78.19 |  93.74 | 56.90 |  85.87 | 74.16 |
@@ -63,12 +65,13 @@ Dataset |Learned weights
 ### Query
 All implementations are done by Amirhossein Kazerouni, Milad Soltany and Moein Heidari. For any query please contact us for more information.
 
-```python
-amirhossein477@gmail.com
-soltany.m.99@gmail.com
-moeinheidari7829@gmail.com
+[*amirhossein477@gmail.com*](mailto:amirhossein477@gmail.com)
 
-```
+[*soltany.m.99@gmail.com*](mailto:soltany.m.99@gmail.com)
+
+[*moeinheidari7829@gmail.com*](mailto:moeinheidari7829@gmail.com)
+
+
 ## Citation
 ```
 
