@@ -26,11 +26,8 @@ Please go to ["Instructions.ipynb"](https://github.com/amirhossein-kz/HiFormer/b
 ## Results
 For evaluating the performance of the proposed method, Three challenging tasks in medical image segmentaion has been considered. In bellow, results of the proposed approach for synapse multi-organ segmentation is illustrated.
 </br>
-#### Synapse Multi-Organ Segmentation
 
-
-#### Performance Comparision on SKin Lesion Segmentation
-In order to compare the proposed method with state of the art appraoches on SKin Lesion Segmentation, we considered Drive dataset.  
+#### Performance Comparision on Synapse Multi-Organ Segmentation
 
 Methods (On ISIC 2017) |Dice-Score | Sensivity| Specificaty| Accuracy
 ------------ | -------------|----|-----------------|---- 
@@ -45,40 +42,18 @@ Azad et. all [Proposed TMUnet](https://arxiv.org/abs/2203.01932)	  |**0.9164** 	
 ### For more results on ISIC 2018 and PH2 dataset, please refer to [the paper](https://arxiv.org/abs/2203.01932)
 
 
-#### SKin Lesion Segmentation segmentation result on test data
+#### Perceptual visualization results on test data
 
-![SKin Lesion Segmentation  result](https://github.com/rezazad68/TMUnet/blob/main/Figures/Skin%20lesion_segmentation.png)
-(a) Input images. (b) Ground truth. (c) [U-net](https://arxiv.org/abs/2102.10662). (d) [Gated Axial-Attention](https://arxiv.org/abs/2102.10662). (e) Proposed method without a contextual attention module and (f) Proposed method.
-
-
-## Multiple Myeloma Cell Segmentation
-
-#### Performance Evalution on the Multiple Myeloma Cell Segmentation task
-
-Methods | mIOU
------------- | -------------
-[Frequency recalibration U-Net](https://openaccess.thecvf.com/content/ICCV2021W/CVAMD/papers/Azad_Deep_Frequency_Re-Calibration_U-Net_for_Medical_Image_Segmentation_ICCVW_2021_paper.pdf)	 |0.9392 
-[XLAB Insights](https://arxiv.org/abs/2105.06238)	|0.9360
-[DSC-IITISM](https://arxiv.org/abs/2105.06238)	|0.9356	  
-[Multi-scale attention deeplabv3+](https://arxiv.org/abs/2105.06238)	 |0.9065	  
-[U-Net](https://arxiv.org/abs/1505.04597)	  |0.7665
-[Baseline](https://arxiv.org/abs/2203.01932)	  |0.9172
-[Proposed](https://arxiv.org/abs/2203.01932)	  |**0.9395**
-
-
-
-#### Multiple Myeloma Cell Segmentation results
-
-![Multiple Myeloma Cell Segmentation result](https://github.com/rezazad68/TMUnet/blob/main/Figures/Cell_segmentation.png)
+![Synapse Multi-Organ Segmentation result](https://github.com/amirhossein-kz/HiFormer/blob/main/Figures/synapse.png)
 
 ### Model weights
-You can download the learned weights for each dataset in the following table. 
+You can download the learned weights for sypanse dataset in the following table. 
 
 Dataset |Learned weights
 ------------ | -------------
-[ISIC 2018]() |[TMUnet](https://drive.google.com/file/d/1EU4stQUtUt6bcSoWswBYpfTZd53sVAJy/view?usp=sharing)
-[ISIC 2017]() |[TMUnet](https://drive.google.com/file/d/1gEb8juWB2JjxAws91D3S0wxnrVwuMRZo/view?usp=sharing)
-[Ph2]() | [TMUnet](https://drive.google.com/file/d/1soZ6UYhZk7r5-klflJHZxtbdH6pKi7t6/view?usp=sharing)
+[Synapse Multi-Organ Segmentation]() |[HiFormer-S]()
+[Synapse Multi-Organ Segmentation]() |[HiFormer-B]()
+[Synapse Multi-Organ Segmentation]() | [HiFormer-L]()
 
 
 
@@ -86,6 +61,8 @@ Dataset |Learned weights
 All implementations are done by Amirhossein Kazerouni, Milad Soltany and Moein Heidari. For any query please contact us for more information.
 
 ```python
+amirhossein477@gmail.com
+soltany.m.99@gmail.com
 moeinheidari7829@gmail.com
 
 ```
