@@ -29,16 +29,18 @@ For evaluating the performance of the proposed method, three challenging tasks i
 
 #### Performance Comparision on Synapse Multi-Organ Segmentation
 
-
-|**Setting**| DSC   | HD | Aorta | Gallbladder | Kidney(L) | Kidney(R)| Liver | Pancreas| Spleen | Stomach |
-| ------------------------------------------------------------------------------ |:----------------:|:---------------:|:-------:|:-----------:|:---------:|:----------------:|:-------:|:----------------:|:-------:|:-------:|
-| **CNN as Encoder**                                                             | 75.89          | 28.87         | 85.03 | 65.17     | 80.18   | 76.38          | 90.49 | 57.29          | 85.68 | 69.93 |
-| **Basic Scale Fusion**                                                         | 79.16          | 22.14         | 85.44 | 68.05     | 82.77   | 80.79          | 93.80 | 58.74          | 87.78 | 75.96 |
-| **SSPP Level 1**                                                               | 79.01         | 26.63         | 85.61 | 68.47     | 82.43   | 78.02         | 94.19 | 58.52          | 88.34 | 76.46 |
-| **SSPP Level 2**                                                               | 80.16          | 21.25         | 86.04 | 69.16     | 84.08   | 79.88          | 93.53 | 61.19          | 89.00 | 78.40 |
-| **SSPP Level 3**                                                               | 79.87          | 18.93         | 86.34 | 66.41    | 84.13   | 82.40          | 93.73 | 59.28          | 89.66 | 76.99 |
-| **SSPP Level 4**                                                               | 79.85          | 25.69         | 85.64 | 69.36     | 82.93   | 81.25          | 93.09 | 63.18          | 87.80 | 75.56 |
-
+| <h3 align="left">**Methods** </h3> | DSC <p>&#8593;</p> | HD <p> &#8595;</p>  | Aorta | Gallbladder | Kidney(L) | Kidney(R) | Liver | Pancreas | Spleen | Stomach |
+| --- |:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| **V-Net** |  68.81 |  -  |  75.34 |  51.87 |  77.10 | **80.75**  |  87.84  |  40.05 | 80.56 |  56.98 |
+| **R50 U-Net** |  74.68  |  36.87  |  87.74 |  63.66 |  80.60 |  78.19 |  93.74 | 56.90 |  85.87 | 74.16 |
+| **U-Net** |  76.85 |  39.70 |  89.07 |  **69.72** |  77.77 |  68.60 |  93.43 |  53.98 |  86.67 | 75.58 |
+| **R50 Att-UNet** |  75.57 |  36.97 |  55.92 | 63.91 | 79.20 | 72.71 | 93.56 | 49.37 | 87.19 | 74.95 |
+| **Att-UNet** |  77.77 |  36.02 | **89.55**  | 68.88 | 77.98 | 71.11 | 93.57 | 58.04 | 87.30 | 75.75 |
+| **R50 ViT** |  71.29 |  32.87 |  73.73 |  55.13 |  75.80 |  72.20 |  91.51 |  45.99 |  81.99 | 73.95 |
+| **TransUnet** |  77.48 |  31.69 |  87.23 |  63.13 |  81.87 |  77.02 |  94.08 |  55.86 |  85.08 |  75.62 |
+| **SwinUnet** |  79.13 |  21.55 |  85.47 |  66.53 |  83.28 |  79.61 | **94.29** | 56.58 | **90.66** | 76.60 |
+| **DeepLabv3+ (CNN)** | 77.63 | 39.95 | 88.04 | 66.51 | 82.76 | 74.21 | 91.23 | 58.32 | 87.43 | 73.53 |
+| **TransDeepLab** | **80.16** | **21.25** | 86.04 | 69.16 | **84.08** | 79.88 | 93.53  |**61.19** | 89.00 |  **78.40**|
 
 #### Perceptual visualization results on test data
 
@@ -53,10 +55,6 @@ Dataset |Learned weights
 [Synapse Multi-Organ Segmentation]() |[HiFormer-B](https://drive.google.com/file/d/1-EV0szMsK4flOIu4BOc20mZEW7Nos4cU/view?usp=sharing)
 [Synapse Multi-Organ Segmentation]() | [HiFormer-L](https://drive.google.com/file/d/12ADXxcy__9fB1nHo-6cSwLIWj8rJgN2o/view?usp=sharing)
 
-## Citation
-```
-
-```
 
 ### Query
 All implementations are done by Amirhossein Kazerouni, Milad Soltany and Moein Heidari. For any query please contact us for more information.
@@ -65,6 +63,10 @@ All implementations are done by Amirhossein Kazerouni, Milad Soltany and Moein H
 amirhossein477@gmail.com
 soltany.m.99@gmail.com
 moeinheidari7829@gmail.com
+
+```
+## Citation
+```
 
 ```
 
