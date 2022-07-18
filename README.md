@@ -87,10 +87,9 @@ Dataset |Learned weights
 
 
 ### Query
-All implementations are done by Reza Azad and Moein Heidari. For any query please contact us for more information.
+All implementations are done by Amirhossein Kazerouni, Milad Soltany and Moein Heidari. For any query please contact us for more information.
 
 ```python
-rezazad68@gmail.com
 moeinheidari7829@gmail.com
 
 ```
