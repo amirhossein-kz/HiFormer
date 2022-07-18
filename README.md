@@ -18,7 +18,7 @@ This code has been implemented in python language using Pytorch library and test
 - Pytorch
 
 ## Prepare data, Train/Test
-Please go to ["https://github.com/amirhossein-kz/HiFormer/blob/main/Instructions.ipynb"](Instructions.ipynb) for complete detail on dataset preparation and Train/Test procedure. 
+Please go to ["Instructions.ipynb"](https://github.com/amirhossein-kz/HiFormer/blob/main/Instructions.ipynb) for complete detail on dataset preparation and Train/Test procedure. 
 
 ## Quick Overview
 ![Diagram of the proposed method](https://github.com/rezazad68/TMUnet/blob/main/Figures/Method%20(Main).png)
