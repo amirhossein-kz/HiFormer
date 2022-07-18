@@ -21,16 +21,12 @@ This code has been implemented in python language using Pytorch library and test
 Please go to ["Instructions.ipynb"](https://github.com/amirhossein-kz/HiFormer/blob/main/Instructions.ipynb) for complete detail on dataset preparation and Train/Test procedure. 
 
 ## Quick Overview
-![Diagram of the proposed method](https://github.com/rezazad68/TMUnet/blob/main/Figures/Method%20(Main).png)
-
-### Perceptual visualization of the proposed Contextual Attention module.
-![Diagram of the proposed method](https://github.com/rezazad68/TMUnet/blob/main/Figures/Method%20(Submodule).png)
-
+![Diagram of the proposed method](https://github.com/amirhossein-kz/HiFormer/blob/main/Figures/Model%20Overview.png)
 
 ## Results
-For evaluating the performance of the proposed method, Two challenging task in medical image segmentaion has been considered. In bellow, results of the proposed approach illustrated.
+For evaluating the performance of the proposed method, Three challenging tasks in medical image segmentaion has been considered. In bellow, results of the proposed approach for synapse multi-organ segmentation is illustrated.
 </br>
-#### Task 1: SKin Lesion Segmentation
+#### Synapse Multi-Organ Segmentation
 
 
 #### Performance Comparision on SKin Lesion Segmentation
