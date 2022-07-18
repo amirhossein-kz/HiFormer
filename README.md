@@ -29,17 +29,15 @@ For evaluating the performance of the proposed method, three challenging tasks i
 
 #### Performance Comparision on Synapse Multi-Organ Segmentation
 
-Methods (On ISIC 2017) |Dice-Score | Sensivity| Specificaty| Accuracy
------------- | -------------|----|-----------------|---- 
-Ronneberger and et. all [U-net](https://arxiv.org/abs/1505.04597)       |0.8159	  |0.8172  |0.9680  |0.9164	  
-Oktay et. all [Attention U-net](https://arxiv.org/abs/1804.03999)   |0.8082  |0.7998      |0.9776	  |0.9145
-Lei et. all [DAGAN](https://www.sciencedirect.com/science/article/abs/pii/S1361841520300803)   |0.8425	  |0.8363       |0.9716	 |0.9304
-Chen et. all [TransU-net](https://arxiv.org/abs/2102.04306)   |0.8123  |0.8263     |0.9577	  |0.9207
-Asadi et. all [MCGU-Net](https://arxiv.org/abs/2003.05056)   |0.8927	  |	0.8502      |**0.9855**	  |0.9570	
-Valanarasu et. all [MedT](https://arxiv.org/abs/2102.10662)   |0.8037	  |0.8064       |0.9546	  |0.9090
-Wu et. all [FAT-Net](https://www.sciencedirect.com/science/article/abs/pii/S1361841521003728)   |0.8500	  |0.8392  |0.9725	  |0.9326
-Azad et. all [Proposed TMUnet](https://arxiv.org/abs/2203.01932)	  |**0.9164** 	| **0.9128**	|0.9789	  |**0.9660**
-### For more results on ISIC 2017, ISIC 2018, PH2 and SegPC 2021 datasets, please refer to [the paper]()
+
+|**Setting**| DSC   | HD | Aorta | Gallbladder | Kidney(L) | Kidney(R)| Liver | Pancreas| Spleen | Stomach |
+| ------------------------------------------------------------------------------ |:----------------:|:---------------:|:-------:|:-----------:|:---------:|:----------------:|:-------:|:----------------:|:-------:|:-------:|
+| **CNN as Encoder**                                                             | 75.89          | 28.87         | 85.03 | 65.17     | 80.18   | 76.38          | 90.49 | 57.29          | 85.68 | 69.93 |
+| **Basic Scale Fusion**                                                         | 79.16          | 22.14         | 85.44 | 68.05     | 82.77   | 80.79          | 93.80 | 58.74          | 87.78 | 75.96 |
+| **SSPP Level 1**                                                               | 79.01         | 26.63         | 85.61 | 68.47     | 82.43   | 78.02         | 94.19 | 58.52          | 88.34 | 76.46 |
+| **SSPP Level 2**                                                               | 80.16          | 21.25         | 86.04 | 69.16     | 84.08   | 79.88          | 93.53 | 61.19          | 89.00 | 78.40 |
+| **SSPP Level 3**                                                               | 79.87          | 18.93         | 86.34 | 66.41    | 84.13   | 82.40          | 93.73 | 59.28          | 89.66 | 76.99 |
+| **SSPP Level 4**                                                               | 79.85          | 25.69         | 85.64 | 69.36     | 82.93   | 81.25          | 93.09 | 63.18          | 87.80 | 75.56 |
 
 
 #### Perceptual visualization results on test data
