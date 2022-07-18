@@ -31,7 +31,7 @@ For evaluating the performance of the proposed method, three challenging tasks i
 
 #### Performance Comparision on Synapse Multi-Organ Segmentation
 
-| <h3 align="left">**Methods** </h3> | <p>DSC &#8593;</p> | <p>HD &#8595;</p>  | Aorta | Gallbladder | Kidney(L) | Kidney(R) | Liver | Pancreas | Spleen | Stomach |
+| <h3 align="left">**Methods** </h3> | <p>DSC &#8593;</p> | <p>HD &#8595;</p>  |  <p>Aorta</p> | <p>Gallbladder</p> | <p>Kidney(L)</p> | <p>Kidney(R)</p> | <p>Liver</p> | <p>Pancreas</p> | <p>Spleen</p> | <p>Stomach</p> |
 | --- |:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
 | **DARR** |  69.77 |  -  |  74.74 |  53.77 |  72.31 | 73.24  |  94.08  |  54.18 | 89.90 |  45.96 |
 | **R50 U-Net** |  74.68  |  36.87  |  87.74 |  63.66 |  80.60 |  78.19 |  93.74 | 56.90 |  85.87 | 74.16 |
@@ -57,9 +57,9 @@ You can download the learned weights for sypanse dataset in the following table.
 
 Dataset |Learned weights
 ------------ | -------------
-[Synapse Multi-Organ Segmentation]() |[HiFormer-S](https://drive.google.com/file/d/1yyRyStyOkfQEKRiz64D6VaPiNPmzDkFJ/view?usp=sharing)
-[Synapse Multi-Organ Segmentation]() |[HiFormer-B](https://drive.google.com/file/d/1-EV0szMsK4flOIu4BOc20mZEW7Nos4cU/view?usp=sharing)
-[Synapse Multi-Organ Segmentation]() | [HiFormer-L](https://drive.google.com/file/d/12ADXxcy__9fB1nHo-6cSwLIWj8rJgN2o/view?usp=sharing)
+Synapse Multi-Organ Segmentation |[HiFormer-S](https://drive.google.com/file/d/1yyRyStyOkfQEKRiz64D6VaPiNPmzDkFJ/view?usp=sharing)
+Synapse Multi-Organ Segmentation |[HiFormer-B](https://drive.google.com/file/d/1-EV0szMsK4flOIu4BOc20mZEW7Nos4cU/view?usp=sharing)
+Synapse Multi-Organ Segmentation | [HiFormer-L](https://drive.google.com/file/d/12ADXxcy__9fB1nHo-6cSwLIWj8rJgN2o/view?usp=sharing)
 
 
 ### Query
