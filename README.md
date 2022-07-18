@@ -24,7 +24,7 @@ Please go to ["Instructions.ipynb"](https://github.com/amirhossein-kz/HiFormer/b
 ![Diagram of the proposed method](https://github.com/amirhossein-kz/HiFormer/blob/main/Figures/Model%20Overview.png)
 
 ## Results
-For evaluating the performance of the proposed method, Three challenging tasks in medical image segmentaion has been considered. In bellow, results of the proposed approach for synapse multi-organ segmentation is illustrated.
+For evaluating the performance of the proposed method, three challenging tasks in medical image segmentaion has been considered. In bellow, results of the proposed approach for synapse multi-organ segmentation is illustrated.
 </br>
 
 #### Performance Comparision on Synapse Multi-Organ Segmentation
@@ -39,7 +39,7 @@ Asadi et. all [MCGU-Net](https://arxiv.org/abs/2003.05056)   |0.8927	  |	0.8502 
 Valanarasu et. all [MedT](https://arxiv.org/abs/2102.10662)   |0.8037	  |0.8064       |0.9546	  |0.9090
 Wu et. all [FAT-Net](https://www.sciencedirect.com/science/article/abs/pii/S1361841521003728)   |0.8500	  |0.8392  |0.9725	  |0.9326
 Azad et. all [Proposed TMUnet](https://arxiv.org/abs/2203.01932)	  |**0.9164** 	| **0.9128**	|0.9789	  |**0.9660**
-### For more results on ISIC 2018 and PH2 dataset, please refer to [the paper](https://arxiv.org/abs/2203.01932)
+### For more results on ISIC 2017, ISIC 2018, PH2 and SegPC 2021 datasets, please refer to [the paper]()
 
 
 #### Perceptual visualization results on test data
