@@ -10,7 +10,7 @@ If this code helps with your research please consider citing the following paper
 #### Please consider starring us, if you found it useful. Thanks
 
 ## Updates
-- July 14, 2022: First release (Complete implemenation for [Synapse Multi-Organ Segmentation](https://www.synapse.org/#!Synapse:syn3193805/wiki/) ,[SKin Lesion Segmentation on ISIC 2017](https://challenge.isic-archive.com/landing/2017/), [SKin Lesion Segmentation on ISIC 2018](https://challenge2018.isic-archive.com/), [SKin Lesion Segmentation on PH2](https://www.fc.up.pt/addi/ph2%20database.html) and [Multiple Myeloma Cell Segmentation (SegPC 2021)](https://www.kaggle.com/sbilab/segpc2021dataset) dataset added.)
+- July 14, 2022: First release (Complete implemenation for [Synapse Multi-Organ Segmentation](https://www.synapse.org/#!Synapse:syn3193805/wiki/) dataset.)
 
 This code has been implemented in python language using Pytorch library and tested in ubuntu OS, though should be compatible with related environment. following Environement and Library needed to run the code:
 
@@ -18,9 +18,40 @@ This code has been implemented in python language using Pytorch library and test
 - Pytorch
 
 ## Prepare data, Train/Test
-Please go to ["Instructions.ipynb"](https://github.com/amirhossein-kz/HiFormer/blob/main/Instructions.ipynb) for complete detail on dataset preparation and Train/Test procedure. 
+Please go to ["Instructions.ipynb"](https://github.com/amirhossein-kz/HiFormer/blob/main/Instructions.ipynb) for complete detail on dataset preparation and Train/Test procedure or follow the instructions below. [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/amirhossein-kz//HiFormer/blob/main/Instructions.ipynb)
 
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/amirhossein-kz//HiFormer/blob/main/Instructions.ipynb)
+
+1) Download the Synapse Dataset from [here](google.com).
+
+2) Run the following code to install the Requirements.
+
+    `pip install -r requirements.txt`
+
+3) Run the below code to train HiFormer on the synapse dataset.
+
+    ```bash
+    python train.py --root_path ./data/Synapse/train_npz --test_path ./data/Synapse/test_vol_h5  --model_name hiformer-b --batch_size 10 --eval_interval 20 --max_epochs 400 
+   ```
+    **--root_path**     [Train data path]
+
+    **--test_path**     [Test data path]
+
+    **--eval_interval** [Evaluation epoch]
+
+    **--model_name**    [Choose from [hiformer-s, hiformer-b, hiformer-l]]
+    
+4) Run the below code to test HiFormer on the synapse dataset.
+    ```bash
+    python test.py --test_path ./data/Synapse/test_vol_h5 --model_name hiformer-b --is_savenii --model_weight './hiformer-b_best.pth'
+    ```
+    **--test_path**     [Test data path]
+    
+    **--model_name**    [choose from [hiformer-s, hiformer-b, hiformer-l]]
+    
+    **--is_savenii**    [Whether to save results during inference]
+    
+    **--model_weight**  [HiFormer trained model path]
+
 
 ## Quick Overview
 ![Diagram of the proposed method](https://github.com/amirhossein-kz/HiFormer/blob/main/Figures/Model%20Overview.png)
@@ -31,7 +62,7 @@ For evaluating the performance of the proposed method, three challenging tasks i
 
 #### Performance Comparision on Synapse Multi-Organ Segmentation
 
-| <h3 align="left">**Methods** </h3> | <p>DSC &#8593;</p> | <p>HD &#8595;</p>  |  <p>Aorta</p> | <p>Gallbladder</p> | <p>Kidney(L)</p> | <p>Kidney(R)</p> | <p>Liver</p> | <p>Pancreas</p> | <p>Spleen</p> | <p>Stomach</p> |
+| <h3 align="left">**Methods** </h3> | <p>DSC&#8593;</p> | <p>HD&#8595;</p>  |  <p>Aorta</p> | <p>Gallbladder</p> | <p>Kidney(L)</p> | <p>Kidney(R)</p> | <p>Liver</p> | <p>Pancreas</p> | <p>Spleen</p> | <p>Stomach</p> |
 | --- |:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
 | **DARR** |  69.77 |  -  |  74.74 |  53.77 |  72.31 | 73.24  |  94.08  |  54.18 | 89.90 |  45.96 |
 | **R50 U-Net** |  74.68  |  36.87  |  87.74 |  63.66 |  80.60 |  78.19 |  93.74 | 56.90 |  85.87 | 74.16 |
