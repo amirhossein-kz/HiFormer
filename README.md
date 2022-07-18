@@ -17,21 +17,7 @@ This code has been implemented in python language using Pytorch library and test
 - Python 3
 - Pytorch
 
-
-## Run Demo
-For training deep model and evaluating on each data set follow the bellow steps:</br>
-1- Download the ISIC 2018 train dataset from [this](https://challenge.isic-archive.com/data) link and extract both training dataset and ground truth folders inside the `dataset_isic18`. </br>
-2- Run `Prepare_ISIC2018.py` for data preperation and dividing data to train,validation and test sets. </br>
-3- Run `train_skin.py` for training the model using trainng and validation sets. The model will be train for 100 epochs and it will save the best weights for the valiation set. </br>
-4- For performance calculation and producing segmentation result, run `evaluate_skin.py`. It will represent performance measures and will saves related results in `results` folder.</br>
-
-**Notice:**
-For training and evaluating on ISIC 2017 and ph2 follow the bellow steps :
-
-**ISIC 2017**- Download the ISIC 2017 train dataset from [this](https://challenge.isic-archive.com/data) link and extract both training dataset and ground truth folders inside the `dataset_isic18\7`. </br> then Run ` 	Prepare_ISIC2017.py` for data preperation and dividing data to train,validation and test sets. </br>
-**ph2**- Download the ph2 dataset from [this](https://www.dropbox.com/s/k88qukc20ljnbuo/PH2Dataset.rar) link and extract it then Run ` 	Prepare_ph2.py` for data preperation and dividing data to train,validation and test sets. </br>
-Follow step 3 and 4 for model traing and performance estimation. For ph2 dataset you need to first train the model with ISIC 2017 data set and then fine-tune the trained model using ph2 dataset.
-
+## Prepare data, Train/Test
 
 
 ## Quick Overview
