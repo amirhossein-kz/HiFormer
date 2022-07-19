@@ -110,6 +110,13 @@ All implementations are done by Amirhossein Kazerouni, Milad Soltany and Moein H
 
 ## Citation
 ```
-
+@misc{https://doi.org/10.48550/arxiv.2207.08518,
+  doi = {10.48550/ARXIV.2207.08518},
+  url = {https://arxiv.org/abs/2207.08518},
+  author = {Heidari, Moein and Kazerouni, Amirhossein and Soltany, Milad and Azad, Reza and Aghdam, Ehsan Khodapanah and Cohen-Adad, Julien and Merhof, Dorit},
+  title = {HiFormer: Hierarchical Multi-scale Representations Using Transformers for Medical Image Segmentation},
+  publisher = {arXiv},
+  year = {2022}
+}
 ```
 
