@@ -1,4 +1,4 @@
-# [HiFormer: Hierarchical Multi-scale Representations Using Transformers for Medical Image Segmentation]()
+# [HiFormer: Hierarchical Multi-scale Representations Using Transformers for Medical Image Segmentation](https://arxiv.org/pdf/2207.08518.pdf)
 
 Hierarchical Multi-scale Representations for medical image segmentation with state of the art results on synapse multi-organ segmentation, skin lesion segmentation, multiple myeloma cell segmentation. This method designs two multi-scale feature representations using the seminal Swin Transformer module and a CNN-based encoder, then using a Double-Level Fusion (DLF) module, it allows a fine fusion of global and local features.
 If this code helps with your research please consider citing the following paper:
