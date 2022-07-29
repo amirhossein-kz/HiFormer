@@ -188,8 +188,8 @@ class PyramidFeatures(nn.Module):
 
         return [torch.cat((sw1_CLS_reshaped, sw1_skipped), dim=1), torch.cat((sw3_CLS_reshaped, fm3_sw3_skipped), dim=1)]
 
-
-class DLF(nn.Module):
+# DLF Module
+class All2Cross(nn.Module):
     def __init__(self, config, img_size = 224 , in_chans=3, embed_dim=(96, 384), norm_layer=nn.LayerNorm):
         super().__init__()
         self.cross_pos_embed = config.cross_pos_embed
@@ -209,7 +209,7 @@ class DLF(nn.Module):
         for idx, block_config in enumerate(config.depth):
             curr_depth = max(block_config[:-1]) + block_config[-1]
             dpr_ = dpr[dpr_ptr:dpr_ptr + curr_depth]
-            blk = DLFBlock(embed_dim, num_patches, block_config, num_heads=config.num_heads, mlp_ratio=config.mlp_ratio,
+            blk = MultiScaleBlock(embed_dim, num_patches, block_config, num_heads=config.num_heads, mlp_ratio=config.mlp_ratio,
                                   qkv_bias=config.qkv_bias, qk_scale=config.qk_scale, drop=config.drop_rate, 
                                   attn_drop=config.attn_drop_rate, drop_path=dpr_, norm_layer=norm_layer)
             dpr_ptr += curr_depth

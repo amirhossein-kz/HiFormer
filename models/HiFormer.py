@@ -1,7 +1,7 @@
 import torch.nn as nn
 from einops.layers.torch import Rearrange
 
-from models.Encoder import DLF
+from models.Encoder import All2Cross
 from models.Decoder import ConvUpsample, SegmentationHead
 
 
@@ -11,7 +11,7 @@ class HiFormer(nn.Module):
         self.img_size = img_size
         self.patch_size = [4, 16]
         self.n_classes = n_classes
-        self.DLF = DLF(config = config, img_size= img_size, in_chans=in_chans)
+        self.All2Cross = All2Cross(config = config, img_size= img_size, in_chans=in_chans)
         
         self.ConvUp_s = ConvUpsample(in_chans=384, out_chans=[128,128], upsample=True)
         self.ConvUp_l = ConvUpsample(in_chans=96, upsample=False)
@@ -33,7 +33,7 @@ class HiFormer(nn.Module):
         )
     
     def forward(self, x):
-        xs = self.DLF(x)
+        xs = self.All2Cross(x)
         embeddings = [x[:, 1:] for x in xs]
         reshaped_embed = []
         for i, embed in enumerate(embeddings):
