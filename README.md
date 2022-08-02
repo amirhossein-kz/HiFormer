@@ -116,6 +116,4 @@ All implementations are done by Amirhossein Kazerouni, Milad Soltany and Moein H
   journal={arXiv preprint arXiv:2207.08518},
   year={2022}
 }
-
 ```
-
