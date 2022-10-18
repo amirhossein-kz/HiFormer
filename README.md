@@ -11,6 +11,7 @@ If this code helps with your research please consider citing the following paper
 #### Please consider starring us, if you found it useful. Thanks!
 
 ## Updates
+- October 10, 2022: Accepted in WACV 2023!
 - July 14, 2022: First release (Complete implemenation for [Synapse Multi-Organ Segmentation](https://www.synapse.org/#!Synapse:syn3193805/wiki/) dataset.)
 
 This code has been implemented in python language using Pytorch library and tested in ubuntu OS, though should be compatible with related environment. following Environement and Library needed to run the code:
