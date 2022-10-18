@@ -521,19 +521,21 @@ class MultiScaleBlock(nn.Module):
             self.revert_projs.append(nn.Sequential(*tmp))
 
     def forward(self, x):
-        outs_b = [block(x_) for x_, block in zip(x, self.blocks)]
+        inp = x
         
         # only take the cls token out
-        proj_cls_token = [proj(x[:, 0:1]) for x, proj in zip(outs_b, self.projs)]
+        proj_cls_token = [proj(x[:, 0:1]) for x, proj in zip(inp, self.projs)]
 
         # cross attention
         outs = []
         for i in range(self.num_branches):
-            tmp = torch.cat((proj_cls_token[i], outs_b[(i + 1) % self.num_branches][:, 1:, ...]), dim=1)
+            tmp = torch.cat((proj_cls_token[i], inp[(i + 1) % self.num_branches][:, 1:, ...]), dim=1)
             tmp = self.fusion[i](tmp)
             reverted_proj_cls_token = self.revert_projs[i](tmp[:, 0:1, ...])
-            tmp = torch.cat((reverted_proj_cls_token, outs_b[i][:, 1:, ...]), dim=1)
+            tmp = torch.cat((reverted_proj_cls_token, inp[i][:, 1:, ...]), dim=1)
             outs.append(tmp)
+            
+        outs_b = [block(x_) for x_, block in zip(outs, self.blocks)]
         return outs
 
 
