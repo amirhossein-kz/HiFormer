@@ -84,15 +84,6 @@ For evaluating the performance of the proposed method, three challenging tasks i
 
 ![Synapse Multi-Organ Segmentation result](https://github.com/amirhossein-kz/HiFormer/blob/main/Figures/synapse.png)
 
-## Model weights
-You can download the learned weights for sypanse dataset in the following table. 
-
-Dataset |Learned weights
------------- | -------------
-Synapse Multi-Organ Segmentation |[HiFormer-S](https://drive.google.com/uc?export=download&id=1yyRyStyOkfQEKRiz64D6VaPiNPmzDkFJ)
-Synapse Multi-Organ Segmentation |[HiFormer-B](https://drive.google.com/uc?export=download&id=1-EV0szMsK4flOIu4BOc20mZEW7Nos4cU)
-Synapse Multi-Organ Segmentation | [HiFormer-L](https://drive.google.com/uc?export=download&id=12ADXxcy__9fB1nHo-6cSwLIWj8rJgN2o)
-
 ## References
 * [TransUnet](https://github.com/Beckschen/TransUNet)
 * [Swin Transformer](https://github.com/microsoft/Swin-Transformer)
