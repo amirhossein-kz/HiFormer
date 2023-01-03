@@ -101,7 +101,7 @@ All implementations are done by Amirhossein Kazerouni, Milad Soltany and Moein H
 
 
 ## Citation
-```
+```python
 @inproceedings{heidari2023hiformer,
   title={Hiformer: Hierarchical multi-scale representations using transformers for medical image segmentation},
   author={Heidari, Moein and Kazerouni, Amirhossein and Soltany, Milad and Azad, Reza and Aghdam, Ehsan Khodapanah and Cohen-Adad, Julien and Merhof, Dorit},
