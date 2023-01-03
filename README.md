@@ -102,10 +102,11 @@ All implementations are done by Amirhossein Kazerouni, Milad Soltany and Moein H
 
 ## Citation
 ```
-@article{heidari2022hiformer,
-  title={HiFormer: Hierarchical Multi-scale Representations Using Transformers for Medical Image Segmentation},
+@inproceedings{heidari2023hiformer,
+  title={Hiformer: Hierarchical multi-scale representations using transformers for medical image segmentation},
   author={Heidari, Moein and Kazerouni, Amirhossein and Soltany, Milad and Azad, Reza and Aghdam, Ehsan Khodapanah and Cohen-Adad, Julien and Merhof, Dorit},
-  journal={arXiv preprint arXiv:2207.08518},
-  year={2022}
+  booktitle={Proceedings of the IEEE/CVF Winter Conference on Applications of Computer Vision},
+  pages={6202--6212},
+  year={2023}
 }
 ```
