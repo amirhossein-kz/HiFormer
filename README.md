@@ -91,7 +91,7 @@ For evaluating the performance of the proposed method, three challenging tasks i
 * [CrossViT](https://github.com/IBM/CrossViT)
 
 ## Query
-All implementations are done by Amirhossein Kazerouni, Milad Soltany and Moein Heidari. For any query please contact us for more information.
+All implementations are done by Amirhossein Kazerouni, Milad Soltany and Moein Heidari. For any query, please contact us for more information.
 
 [*amirhossein477@gmail.com*](mailto:amirhossein477@gmail.com)
 
